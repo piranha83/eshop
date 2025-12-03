@@ -1,0 +1,283 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Material font */
+@import '~material-design-icons/iconfont/material-icons.css';
+
+/* Global */
+
+* {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+    color: #000;
+    margin: 0px 0px;
+    overflow: auto;
+}
+
+body {
+  margin-top: 60px;
+  min-width: 830px;
+}
+
+h3 {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.center {
+  text-align: center;
+}
+
+/* app */
+
+nav {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 9990;
+    background-color: #FFF;
+    min-height: 60px;
+    line-height: 24px;
+    padding-left: 10px;
+}
+
+nav a, nav a.material-icons {
+  display: inline-block !important;
+    line-height: 60px;
+    font-size: 18px;
+    color:#ff983d;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+nav a:not(.active) {
+  text-decoration: none;
+}
+
+/* button */
+
+button.primary { background: #7f16ff; color: #FFFFFF; }
+button.accent  { background: #087efd; color: #FFFFFF; }
+button.success { background: #2da94a; }
+button.warning { background: #e0a800; color: #FFFFFF; }
+button:disabled { background: #DDDDDD; cursor: default; }
+button.active { border: rgb(65, 28, 230); }
+button, .button {
+      /* Auto layout */
+      flex-direction: row;
+      align-items: center;
+      padding: 12px 20px;
+      background: #F9F9F9;
+      border: 1px solid #DDDDDD;
+      box-sizing: border-box;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 16px;
+      letter-spacing: -0.0024em;
+      color: #555555;
+      cursor: pointer;
+}
+
+/* cart */
+
+.cart { position: fixed; top: 55px; right: 10px; z-index: 9999; }
+.cart ul { padding-left: 5px; }
+.cart li, ul.submenu li { list-style: none; margin: 5px 0px; }
+.cart li.footer { text-align: right; font-weight: bold; }
+.cart button.accent { margin-left: 10px; }
+.buy { position: fixed; top: 10px; right: 10px; z-index: 9999; }
+
+/* productcard */
+
+.app-productcard {
+    display: inline-block; 
+    margin: 5px 10px; border-radius: 10px; border: 1px dashed #DDDDDD;
+    padding: 20px 20px;
+    vertical-align: top;
+    width: 350px;
+    text-align: center;
+  }
+
+  .app-productcard a {
+    display: block;
+    font-size: 16px;
+    line-height: 32px;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .app-productcard img {
+    width: inherit;
+  }
+
+  /* raiting */
+
+  .app-raiting.material-icons { color: #DDDDDD; width: 25px; cursor: pointer; overflow: hidden; }
+  .app-raiting.material-icons.active { color: #e0a800; }
+
+  /* toggle */
+
+  .app-toggle { display: block; margin: 10px 10px; }
+  .app-toggle button { margin-right: 10px; }
+
+  .error {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+  }
+
+  /*loader*/
+  .loading {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    overflow: hidden;
+    background: #d4d4d4;
+    display: none;
+  }
+  .loader,
+  .loader:after {
+    width: 8em;
+    height: 8em;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 45%;
+  }
+
+  .search {
+    position: fixed;
+    top: 10px;
+    right: 150px;
+    z-index: 9999;
+  }
+
+  /*form*/
+  .w500 {
+    width: 500px;
+    text-align: right;
+  }
+
+  form input, form select {
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 20px;
+    background: #ffffff;
+    border: 1px solid #DDDDDD;
+    box-sizing: border-box;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: -0.0024em;
+    color: #555555;
+    display: inline-block;
+    margin: 5px 5px;
+    vertical-align: middle;
+  }
+  
+  form input:disabled {
+    background-color: #F9F9F9;
+  }
+
+  form label, form h2 {
+    flex-direction: row;
+    align-items: center;
+    padding: 5px 0px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: -0.0024em;
+    color: #555555;
+    display: inline-block;
+    margin: 5px 5px;
+    vertical-align: middle;
+    width: 150px;
+  }
+
+  form h2 {
+    display: block;
+    width: auto;
+  }
+
+  .form h1 {
+    font-weight: 500;
+    font-size: 16px;
+    padding: 5px 0px;
+    color: #e0a800;
+    line-height: 20px;
+    text-align: right;
+  }
+
+  form .alert {
+    color: #e0a800;
+    line-height: 20px;
+  }
+
+  form select {
+    width: 58%;
+  }
+
+  .hidden {
+    visibility: hidden;
+  }
+
+  ul.submenu {
+    position: absolute;
+    list-style: none;
+    padding: 0;
+    /* Auto layout */
+    flex-direction: row;
+    padding: 12px 20px;
+    background: #F9F9F9;
+    border: 1px solid #DDDDDD;
+    box-sizing: border-box;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: -0.0024em;
+    color: #555555; 
+    z-index: 99999999;  
+  }
+
+  nav ul.submenu {
+    position: fixed;
+  }
+
+  ul.submenu li {
+    margin: 10px 0px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 16px;
+    letter-spacing: -0.0024em;
+    color: #555555;
+    cursor: pointer
+  }
+  
+  /*footer*/
+  .contact {
+    bottom: 0px;
+    background-color: #F9F9F9;
+    width: 100%;
+    text-align: center;
+    margin: 10px 0px 0px 0px;
+    padding: 10px 10px;
+  }
+
+  /*map*/
+  .contact {
+    padding: 10px 10px;
+    overflow: hidden;
+  }
+  .map {
+    width: 99%;
+    height: 350px;
+  }

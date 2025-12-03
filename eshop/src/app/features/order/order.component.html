@@ -1,0 +1,47 @@
+<div class="form w500">
+    <h1>Оформление заказа</h1>
+    <form [formGroup]="schema.form" (ngSubmit)="onSubmit()">
+        <label for="street">Фамилия Имя: </label>
+        <input type="text" formControlName="name">
+        <div [hidden]="valid('name')" class="alert">Формат невалиден</div>
+
+        <label for="phone">Телефон: </label>
+        <input type="text" formControlName="phone">
+        <div [hidden]="valid('phone')" class="alert">Формат невалиден</div>
+
+        <label for="delivery">Способ получения товара: </label>
+        <select formControlName="delivery" (change)="changeDelivery($event.target)">
+            <option value="athome">доставка на дом</option>
+            <option value="atshop">забрать в магазине</option>
+        </select>
+        <div formGroupName="address">
+            <h2>Адрес доставки</h2>
+
+            <label for="street">Улица: </label>
+            <input type="text" formControlName="street" [attr.disabled]="(delivery ? null : '')">
+            <div [hidden]="valid('address.street')" class="alert">Формат невалиден</div>
+
+            <label for="city">Город: </label>
+            <input type="text" formControlName="city" [attr.disabled]="(delivery ? null : '')">
+            <div [hidden]="valid('address.city')" class="alert">Формат невалиден</div>
+
+            <label for="state">Штат: </label>
+            <input type="text" formControlName="state" [attr.disabled]="(delivery ? null : '')">
+            <div [hidden]="valid('address.state')" class="alert">Формат невалиден</div>
+
+            <label for="zip">Индекс: </label>
+            <input type="text" formControlName="zip" [attr.disabled]="(delivery ? null : '')">
+            <div [hidden]="valid('address.zip')" class="alert">Формат невалиден</div>
+        </div>
+
+        <h2>Способ оплаты</h2>
+        <label for="checkout">наличными</label>
+        <input type="radio" value="cash" [attr.disabled]="(delivery ? '' : null)" formControlName="checkout"/>
+        <label for="checkout">картой</label>
+        <input type="radio" value="paypal" formControlName="checkout"/>
+        <div [hidden]="valid('checkout')" class="alert">Формат невалиден</div>
+        <br>
+        
+        <button [disabled]="schema.form.invalid" class="button warning" type="submit">Сохранить</button>
+    </form>
+</div>
