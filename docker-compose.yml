@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  moq:
+    build:
+     context: ./moq
+     dockerfile: Dockerfile
+    ports:
+      - "8081:3000"
+    restart: always
+
+  frontend:
+    build:
+     context: ./eshop
+     dockerfile: Dockerfile
+    ports:
+      - "8083:80"
+    restart: always
