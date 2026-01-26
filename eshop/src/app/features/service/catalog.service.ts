@@ -9,10 +9,10 @@ export class CatalogService {
   constructor(private readonly dataService: DataService) {}
 
   find(filtes: Filter): Observable<ProductPaged> {
-    return this.dataService.get<Observable<ProductPaged>>(filtes)
+    return this.dataService.get<ProductPaged>(filtes)
   }
 
   get(id: number): Observable<Product> {
-    return this.dataService.getById<Observable<Product>>(id);
+    return this.dataService.getById<Product>(id);
   }
 }

@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  url: 'https://localhost:7259/'
+  url: 'https://piranha83.github.io/eshop/'
 };

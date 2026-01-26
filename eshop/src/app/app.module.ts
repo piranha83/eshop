@@ -20,8 +20,9 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { SharedModule } from './shared/shared.module';
 import { OrderModule } from './features/order/order.module';
-import { environment } from 'src/environments/environment';
 import { ContactsComponent } from './pages/contacts/contacts.component';
+import { environment } from 'src/environments/environment';
+import Data from '../../../moq/products.json';
 
 registerLocaleData(localeRu, 'ru-RU', localeRuExtra);
 
@@ -52,11 +53,12 @@ registerLocaleData(localeRu, 'ru-RU', localeRuExtra);
         switch(environment.production)
         {
           case false:
-            let ds = new HttpDataService(http);/*new DataService();
-            ds.setData(of(Products));*/
+            let ds = new HttpDataService(http);
             return ds;
+
           case true:
-            let hds = new HttpDataService(http);
+            let hds = new DataService();
+            hds.setData(Data.products);
             return hds;
         }
       },

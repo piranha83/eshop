@@ -1,24 +1,8 @@
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { map, Observable } from "rxjs";
+import { map, Observable, of } from "rxjs";
 import { environment } from "src/environments/environment";
-import { Paged } from "src/app/features/productcard/product.type";
-import { Filter, SortValueType } from "../toggle/toggle.type";
-
-export class DataService {
-  private data: any;
-
-  setData<T>(val: T): void {
-    this.data = val;
-  }
-
-  get<T>(filter: Filter): T {
-    return this.data;
-  }
-
-  public getById<T>(id: number): T {
-    return this.data[0];
-  }
-}
+import { Paged, Product } from "src/app/features/productcard/product.type";
+import { Filter } from "../toggle/toggle.type";
 
 export class HttpDataService {
   readonly headers = new HttpHeaders().set("Content-Type", "application/json");
@@ -32,7 +16,7 @@ export class HttpDataService {
     return this.http.get<T>(this.url + id);
   }
 
-  get<T>(filter: Filter): Observable<Paged<T>> {
+  public get<T>(filter: Filter): Observable<Paged<T>> {
     if (filter.page <= 0) throw new Error('Argument page must be gather 0');
     if (filter.size <= 0) throw new Error('Argument size must be gather 0');
 
@@ -65,3 +49,36 @@ export class HttpDataService {
     }));
   }
 }
+
+export class DataService extends HttpDataService {
+  private data: any;
+
+  constructor() { super(null!); }
+
+  public setData(val: Product[]): void { this.data = val; }
+
+  public override get<T>(filter: Filter): Observable<T> {
+    var res: Product[] = this.data;
+    let index = (filter.page - 1) * filter.size;
+    if(filter.term != '')
+      res = res.filter(x => x.name == filter.term);
+    if(filter.sort == 'PriceAsc')
+      res = res.sort((a, b) => a.price - b.price);
+    if(filter.sort == 'PriceDesc')
+      res = res.sort((a, b) => b.price - a.price);
+    if(filter.toggle == 'HasDiscount')
+      res = res.filter(x => x.discount != 0);
+    if(filter.toggle == 'InStock')
+      res = res.filter(x => x.inStock);
+    if(filter.page > 0 && filter.size > 0)
+      res = res.slice(index, index + filter.size);
+    return of<any>({ data: res, total: this.data.length });
+  }
+
+  public override getById<T>(id: number): Observable<T> {
+    if (id < 0) throw new Error('Argument id must be gather -1');
+    var res: Product[] = this.data;
+    return of<any>(res.filter(x => x.id == id)[0]);
+  }
+}
+
