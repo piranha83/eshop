@@ -22,7 +22,7 @@ export class ContactsComponent implements AfterViewInit {
 
     const map = new maplibregl.Map({
       container: 'map',
-      style: 'http://localhost:8081/liberty.json',
+      style: 'http://localhost:7259/liberty.json',
       center: [37.62, 55.75],
       zoom: 15
     });
