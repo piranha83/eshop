@@ -1,5 +1,3 @@
-using Infrastructure.Core.Abstractions;
-using Infrastructure.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,8 +16,7 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(configuration, nameof(configuration));
 
         return serviceCollection
-            .AddDbContext<TContext>(options => options.UseNpgsql(configuration.GetConnectionString("Default")))
-            .AddScoped(typeof(IRepository<,,>), typeof(PgRepository<,,>));
+            .AddDbContext<TContext>(options => options.UseNpgsql(configuration.GetConnectionString("Default")));
     }
 
     public static async Task EnsureCreated<TContext>(this IServiceScope scope)
@@ -40,7 +37,6 @@ public static class ServiceCollectionExtensions
         return serviceCollection.AddCors(options => options.AddPolicy(policy, policy => policy
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowAnyOrigin()));
-            //.WithOrigins(origin)));
+            .WithOrigins(origin)));
     }
 }

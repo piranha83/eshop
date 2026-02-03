@@ -29,7 +29,4 @@
   <ItemGroup>
     <ProjectReference Include="..\infrastructure.core\Infrastructure.Core.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-  </ItemGroup>
 </Project>

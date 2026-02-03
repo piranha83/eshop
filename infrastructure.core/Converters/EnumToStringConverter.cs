@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Infrastructure.Core.Repositories;
+namespace Infrastructure.Core.Converters;
 
 ///<inheritdoc/>
 public class EnumToStringConverter<TEnum> : ValueConverter<TEnum, string>

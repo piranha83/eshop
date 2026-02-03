@@ -4,6 +4,7 @@ using System.Text.Json;
 using Infrastructure.Core.Abstractions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ public static class ControllerExtensions
         string groupName,
         JsonSerializerOptions? mapping = null)
     where TContext : DbContext
-    where TEntity : IEntity<TKey>
+    where TEntity : class, IEntity<TKey>
     where TKey : struct
     {
         var name = groupName.Replace("Model", "s").ToLower();
@@ -48,12 +49,13 @@ public static class ControllerExtensions
         routeGroupBuilder.MapGet("/", async (
             [AsParameters] [Description("Фильтры")] SearchCriteria searchCriteria,
             [FromServices] IHttpContextAccessor contextAccessor,
-            [FromServices] IRepository<TContext, TEntity, TKey> repository,
+            [FromServices] TContext context,
             CancellationToken ct) =>
                 {
                     searchCriteria.SetTerm(contextAccessor);
-                    var data = await repository.Get(searchCriteria, ct);
-                    var total = await repository.Total(searchCriteria, ct);
+                    var entity = context.Set<TEntity>().AsNoTracking();
+                    var data = await entity.Search<TEntity, TKey>(searchCriteria).ToListAsync(ct);
+                    var total = await entity.Search<TEntity, TKey>(searchCriteria).CountAsync(ct);
 
                     contextAccessor.HttpContext!.Response.Headers.Append("x-total-count", total.ToString());
                     return Results.Json(data, mapping);
@@ -64,20 +66,20 @@ public static class ControllerExtensions
 
         routeGroupBuilder.MapGet("/{id}", async (
             [FromRoute][Description("Уникальный идентификатор")] TKey id,
-            [FromServices] IRepository<TContext, TEntity, TKey> repository,
+            [FromServices] TContext context,
             CancellationToken ct) =>
-                Results.Json(await repository.Get(id, ct), mapping))
+                Results.Json(context.Set<TEntity>().AsNoTracking().FirstOrDefault(x => x.Id.Equals(id)), mapping))
                 .Produces<TEntity>(StatusCodes.Status200OK, contentType: "application/json")
                 .Produces(StatusCodes.Status500InternalServerError)
                 .WithDescription("Извлечение и просмотр существующих данных");
 
         routeGroupBuilder.MapPost("/", async (
             [FromBody][Description("Сущность для добавления")] TEntity model,
-            [FromServices] IRepository<TContext, TEntity, TKey> repository,
+            [FromServices] TContext context,
             CancellationToken ct) =>
                 {
-                    var id = await repository.Add(model, ct);
-                    await repository.SaveChanges(ct);
+                    var id = await context.AddAsync(model, ct);
+                    await context.SaveChangesAsync(ct);
                     return Results.Json(id, mapping);
                 })
                 .Produces<TKey>()
@@ -86,12 +88,14 @@ public static class ControllerExtensions
                 .WithDescription("Добавление новой записи в базу данных");
 
         routeGroupBuilder.MapPut("/{id}", async (
-            [FromBody][Description("Сущность для обновления")] TEntity model,
-            [FromServices] IRepository<TContext, TEntity, TKey> repository,
+            [FromRoute][Description("Уникальный идентификатор")] TKey id,
+            [FromBody][Description("Сущность для обновления")] JsonPatchDocument<TEntity> patch,
+            [FromServices] TContext context,
             CancellationToken ct) =>
                 {
-                    await repository.Update(model, ct);
-                    await repository.SaveChanges(ct);
+                    var entity = await context.Set<TEntity>().FirstAsync(x => x.Id.Equals(id), ct);
+                    patch.ApplyTo(entity);
+                    await context.SaveChangesAsync(ct);
                     return Results.Ok();
                 })
                 .Produces(StatusCodes.Status200OK)
@@ -100,11 +104,10 @@ public static class ControllerExtensions
 
         routeGroupBuilder.MapDelete("/{id}", async (
             [FromRoute][Description("Уникальный идентификатор")] TKey id,
-            [FromServices] IRepository<TContext, TEntity, TKey> repository,
+            [FromServices] TContext context,
             CancellationToken ct) =>
                 {
-                    await repository.Delete(id, ct);
-                    await repository.SaveChanges(ct);
+                    await context.Set<TEntity>().Where(x => x.Id.Equals(id)).ExecuteDeleteAsync(ct);
                     return Results.Ok();
                 })
                 .Produces(StatusCodes.Status200OK)

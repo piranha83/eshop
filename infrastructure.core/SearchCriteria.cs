@@ -10,7 +10,7 @@ namespace Infrastructure.Core;
 /// Фильтры.
 /// </summary>
 public sealed class SearchCriteria
-{    
+{
     [FromQuery(Name = "_page")]
     [Description("Страница")]
     public int? Skip { get; set; }
@@ -35,10 +35,26 @@ public sealed class SearchCriteria
     [Description("Фильтрация")]
     public Dictionary<string, StringValues>? Term { get; private set; }
 
+    [XmlIgnore]
+    [Description("Редактируемые")]
+    public bool? Editable { get; private set; }
+
+    public SearchCriteria() { }
+
+    public SearchCriteria(Dictionary<string, StringValues> term) => Term = term;
+
     public void SetTerm(IHttpContextAccessor httpContextAccessor)
     {
         Term = httpContextAccessor.HttpContext?.Request.Query
             .Where(x => x.Key != "_page" && x.Key != "_limit" && x.Key != "_sort" && x.Key != "_order" && x.Key != "_include")
             .ToDictionary(x => x.Key, x => x.Value);
     }
+
+    public static SearchCriteria CreateEditable => new SearchCriteria { Editable = true };
+
+    public static SearchCriteria Create(string name, StringValues value, bool editable = false) =>
+        new SearchCriteria(new Dictionary<string, StringValues>
+        {
+            [name] = value,
+        }) { Editable = editable };
 }
