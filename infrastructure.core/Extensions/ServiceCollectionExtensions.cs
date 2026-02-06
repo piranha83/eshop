@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,5 +39,23 @@ public static class ServiceCollectionExtensions
             .AllowAnyHeader()
             .AllowAnyMethod()
             .WithOrigins(origin)));
+    }
+
+    public static IServiceCollection AddMapper(this IServiceCollection serviceCollection, Assembly assembly)
+    {
+        ArgumentNullException.ThrowIfNull(serviceCollection);
+        ArgumentNullException.ThrowIfNull(assembly);
+
+        return serviceCollection.AddAutoMapper(assembly);
+    }
+
+    public static IServiceCollection AddCrudServices(this IServiceCollection serviceCollection)
+    {
+        ArgumentNullException.ThrowIfNull(serviceCollection);
+
+        return serviceCollection
+            .AddTransient(typeof(IEntityReadService<,,,>), typeof(EntityReadService<,,,>))
+            .AddTransient(typeof(IEntityUpdateService<,,,>), typeof(EntityUpdateService<,,,>))
+            .AddTransient(typeof(IEntityDeleteService<,,>), typeof(EntityDeleteService<,,>));
     }
 }

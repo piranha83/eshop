@@ -41,8 +41,7 @@ internal static class Extensions
 
     internal static CatalogModel? ImportDemo()
     {
-        var catalogId = 1;
-        var tag = new TagModel { Id = 1, Name = "еда" };
+        var tag = new TagModel { Name = "еда" };
         using var res = Assembly.GetExecutingAssembly().GetManifestResourceStream("Catalog.Api.products.json");
         if (res == null) return null;
 
@@ -52,12 +51,10 @@ internal static class Extensions
         });
         catalog!.Products.ForEach(x =>
         {
-            x.CatalogId = catalogId;
             x.Tags = [tag];
         });
         return new CatalogModel
         {
-            Id = catalogId,
             Name = "Demo Store",
             Description = "Food cort demo store",
             Products = catalog.Products,

@@ -46,5 +46,5 @@ public class CatalogModel : IEntity<long>, IUpdated
     /// Продукты.
     /// </summary>
     [Description("Продукты")]
-    public List<ProductModel> Products { get; set; } = new();
+    public List<ProductModel> Products { get; set; } = default!;
 }

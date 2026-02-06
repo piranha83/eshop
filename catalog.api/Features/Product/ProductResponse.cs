@@ -1,10 +1,13 @@
-namespace Catalog.Api.DatabaseContext.Models;
-
 using System.ComponentModel;
-using Infrastructure.Core.Abstractions;
+using Catalog.Api.DatabaseContext.Models;
 
-///<inheritdoc/>
-public class ProductModel : IEntity<long>, IUpdated
+namespace Catalog.Api.Features.Product;
+
+/// <summary>
+/// Продукт.
+/// </summary>
+[Description("Продукт")]
+public class ProductResponse
 {
     /// <summary>
     /// Идентификатор.
@@ -17,7 +20,7 @@ public class ProductModel : IEntity<long>, IUpdated
     /// </summary>
     [Description("Имя")]
     public string Name { get; set; } = default!;
-    
+
     /// <summary>
     /// Описание.
     /// </summary>
@@ -29,19 +32,19 @@ public class ProductModel : IEntity<long>, IUpdated
     /// </summary>
     [Description("Цена")]
     public decimal Price { get; set; }
-    
+
     /// <summary>
     /// В наличии.
     /// </summary>
     [Description("В наличии")]
     public bool InStock { get; set; }
-    
+
     /// <summary>
     /// Скидка.
     /// </summary>
     [Description("Скидка")]
     public decimal Discount { get; set; }
-    
+
     /// <summary>
     /// Картинка.
     /// </summary>
@@ -55,32 +58,14 @@ public class ProductModel : IEntity<long>, IUpdated
     public int Rate { get; set; }
 
     /// <summary>
-    /// Кто редактировал.
-    /// </summary>
-    [Description("Кто редактировал")]
-    public Guid? Updated { get; set; }
-    
-    /// <summary>
-    /// Дата редактирования.
-    /// </summary>
-    [Description("Дата редактирования")]
-    public DateTimeOffset? UpdatedDate { get; set; }
-
-    /// <summary>
     /// Идентигфикатор каталога.
     /// </summary>
     [Description("Идентигфикатор каталога")]
     public long CatalogId { get; set; }
 
     /// <summary>
-    /// Каталог.
-    /// </summary>
-    [Description("Каталог")]
-    public CatalogModel Catalog { get; set; } = default!;
-    
-    /// <summary>
     /// Тэги.
     /// </summary>
     [Description("Тэги")]
-    public List<TagModel> Tags { get; set; } = default!;
+    public List<TagResponse>? Tags { get; set; }
 }
