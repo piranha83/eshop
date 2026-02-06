@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using Infrastructure.Core.Abstractions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,9 @@ namespace Infrastructure.Core.Extensions;
 internal class EntityReadService<TContext, TEntity, TKey, TEntityResponse>(
     IHttpContextAccessor contextAccessor,
     TContext context,
-    IMapper mapper) : IEntityReadService<TContext, TEntity, TKey, TEntityResponse>
+    IMapper mapper,
+    IValidator<SearchCriteria> validator) 
+    : IEntityReadService<TContext, TEntity, TKey, TEntityResponse>
     where TContext : DbContext
     where TEntity : class, IEntity<TKey>
     where TKey : struct
@@ -18,6 +21,8 @@ internal class EntityReadService<TContext, TEntity, TKey, TEntityResponse>(
     ///<inheritdoc/>
     public async Task<List<TEntityResponse>> Find(SearchCriteria searchCriteria, CancellationToken ct)
     {
+        await validator.Validate<SearchCriteria>(searchCriteria);
+
         searchCriteria.SetTerm(contextAccessor);
         var entity = context.Set<TEntity>().AsNoTracking();
         var data = await entity.Search<TEntity, TKey>(searchCriteria).ToListAsync(ct);

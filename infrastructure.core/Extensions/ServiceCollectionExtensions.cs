@@ -1,4 +1,5 @@
 using System.Reflection;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,5 +58,12 @@ public static class ServiceCollectionExtensions
             .AddTransient(typeof(IEntityReadService<,,,>), typeof(EntityReadService<,,,>))
             .AddTransient(typeof(IEntityUpdateService<,,,>), typeof(EntityUpdateService<,,,>))
             .AddTransient(typeof(IEntityDeleteService<,,>), typeof(EntityDeleteService<,,>));
+    }
+
+    public static async Task Validate<TEntity>(this IValidator<TEntity> validator, TEntity model)
+    {
+        var validationResult = await validator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.ToDictionary());
     }
 }
