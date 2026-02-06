@@ -1,11 +1,11 @@
 ARG configuration
 ARG asp_certificate_password
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG configuration
 WORKDIR /src
 COPY ["catalog.api/Catalog.Api.csproj", "catalog.api/"]
