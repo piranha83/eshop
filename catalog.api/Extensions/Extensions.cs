@@ -1,8 +1,3 @@
-using System.Reflection;
-using System.Text.Json;
-using Catalog.Api.DatabaseContext;
-using Catalog.Api.DatabaseContext.Models;
-using Infrastructure.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 
@@ -20,49 +15,5 @@ internal static class Extensions
             RequestPath = "/img",
             DefaultContentType = "application/jpg",
         });
-    }
-
-    internal static async Task Init(this IApplicationBuilder application)
-    {
-        ArgumentNullException.ThrowIfNull(application, nameof(application));
-
-        using var scope = application.ApplicationServices.CreateScope();
-        await scope.EnsureCreated<ApplicationDbContext>();
-
-        var catalog = ImportDemo();
-        if (catalog == null) return;
-
-        using var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        if(await dbContext.Catalogs.AnyAsync()) return;
-
-        dbContext.Catalogs.Add(catalog);
-        await dbContext.SaveChangesAsync();
-    }
-
-    internal static CatalogModel? ImportDemo()
-    {
-        var tag = new TagModel { Name = "еда" };
-        using var res = Assembly.GetExecutingAssembly().GetManifestResourceStream("Catalog.Api.products.json");
-        if (res == null) return null;
-
-        var catalog = JsonSerializer.Deserialize<Catalog>(res, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
-        catalog!.Products.ForEach(x =>
-        {
-            x.Tags = [tag];
-        });
-        return new CatalogModel
-        {
-            Name = "Demo Store",
-            Description = "Food cort demo store",
-            Products = catalog.Products,
-        };
-    }
-
-    private class Catalog
-    {
-        public List<ProductModel> Products { set; get; } = new();
     }
 }

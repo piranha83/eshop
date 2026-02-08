@@ -1,6 +1,7 @@
 using Catalog.Api.DatabaseContext;
 using Catalog.Api.DatabaseContext.Models;
 using Catalog.Api.Extensions;
+using Catalog.Api.Featres.Job;
 using Catalog.Api.Features.Product;
 using FluentValidation;
 using Infrastructure.Core;
@@ -18,10 +19,9 @@ builder.Services.AddHttpContextAccessor();
 //
 builder.Services.AddContext<ApplicationDbContext>(builder.Configuration);
 builder.Services.AddMapper(typeof(Program).Assembly);
+builder.Services.AddHostedService<InitJob>();
 
 var app = builder.Build();
-
-await app.Init();
 
 app.MapGroup("Product")
     .MapGet<ApplicationDbContext, ProductModel, long, ProductResponse>()
