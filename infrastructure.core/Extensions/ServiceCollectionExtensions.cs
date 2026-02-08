@@ -1,8 +1,11 @@
-using Infrastructure.Core.Abstractions;
-using Infrastructure.Core.Repositories;
+using System.Reflection;
+using FluentValidation;
+using FluentValidation.Results;
+using Infrastructure.Core.Features.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace Infrastructure.Core.Extensions;
 
@@ -18,8 +21,7 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(configuration, nameof(configuration));
 
         return serviceCollection
-            .AddDbContext<TContext>(options => options.UseNpgsql(configuration.GetConnectionString("Default")))
-            .AddScoped(typeof(IRepository<,,>), typeof(PgRepository<,,>));
+            .AddDbContext<TContext>(options => options.UseNpgsql(configuration.GetConnectionString("Default")));
     }
 
     public static async Task EnsureCreated<TContext>(this IServiceScope scope)
@@ -40,7 +42,31 @@ public static class ServiceCollectionExtensions
         return serviceCollection.AddCors(options => options.AddPolicy(policy, policy => policy
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .AllowAnyOrigin()));
-            //.WithOrigins(origin)));
+            .WithOrigins(origin)));
+    }
+
+    public static IServiceCollection AddMapper(this IServiceCollection serviceCollection, Assembly assembly)
+    {
+        ArgumentNullException.ThrowIfNull(serviceCollection);
+        ArgumentNullException.ThrowIfNull(assembly);
+
+        return serviceCollection.AddAutoMapper(assembly);
+    }
+
+    public static IServiceCollection AddCrudServices(this IServiceCollection serviceCollection)
+    {
+        ArgumentNullException.ThrowIfNull(serviceCollection);
+
+        return serviceCollection
+            .AddTransient(typeof(IEntityReadService<,,,>), typeof(EntityReadService<,,,>))
+            .AddTransient(typeof(IEntityUpdateService<,,,>), typeof(EntityUpdateService<,,,>))
+            .AddTransient(typeof(IEntityDeleteService<,,>), typeof(EntityDeleteService<,,>));
+    }
+
+    public static async Task Validate<TEntity>(this IValidator<TEntity> validator, TEntity model)
+    {
+        var validationResult = await validator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+            throw new ValidationApiException(validationResult.ToDictionary());
     }
 }

@@ -5,7 +5,7 @@ namespace Infrastructure.Core.Abstractions;
 /// <typeparam name="TKey">Тип идентификатора сущности.</typeparam>
 /// </summary>
 public interface IEntity<TKey>
-where TKey: struct
+where TKey : struct
 {
     /// <summary>
     /// Уникальный идентификатор.

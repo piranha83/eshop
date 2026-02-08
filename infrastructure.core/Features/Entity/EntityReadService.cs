@@ -1,0 +1,44 @@
+using AutoMapper;
+using FluentValidation;
+using Infrastructure.Core.Abstractions;
+using Infrastructure.Core.Extensions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+
+namespace Infrastructure.Core.Features.Entity;
+
+///<inheritdoc/>
+internal class EntityReadService<TContext, TEntity, TKey, TEntityResponse>(
+    IHttpContextAccessor contextAccessor,
+    TContext context,
+    IMapper mapper,
+    IValidator<SearchCriteria> validator) 
+    : IEntityReadService<TContext, TEntity, TKey, TEntityResponse>
+    where TContext : DbContext
+    where TEntity : class, IEntity<TKey>
+    where TKey : struct
+    where TEntityResponse : class
+{
+    ///<inheritdoc/>
+    public async Task<List<TEntityResponse>> Find(SearchCriteria searchCriteria, CancellationToken ct)
+    {
+        await validator.Validate<SearchCriteria>(searchCriteria);
+
+        searchCriteria.SetTerm(contextAccessor.HttpContext?.Request.Query);
+        var entity = context.Set<TEntity>().AsNoTracking();
+        var data = await entity.Search<TEntity, TKey>(searchCriteria).ToListAsync(ct);
+        var total = await entity.Search<TEntity, TKey>(searchCriteria).CountAsync(ct);
+
+        contextAccessor.HttpContext!.Response.Headers.Append("x-total-count", total.ToString());
+
+        return mapper.Map<List<TEntityResponse>>(data);
+    }
+
+    ///<inheritdoc/>
+    public async Task<TEntityResponse?> Find(TKey id, CancellationToken ct)
+    {
+        var model = await context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(x => x.Id.Equals(id));
+
+        return model != null ? mapper.Map<TEntityResponse>(model) : null;
+    }
+}
