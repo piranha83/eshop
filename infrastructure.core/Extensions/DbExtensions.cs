@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Security.Principal;
 using Infrastructure.Core.Abstractions;
+using Infrastructure.Core.Features.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Primitives;

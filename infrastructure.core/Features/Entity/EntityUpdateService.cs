@@ -1,9 +1,10 @@
 using AutoMapper;
 using FluentValidation;
 using Infrastructure.Core.Abstractions;
+using Infrastructure.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Core.Extensions;
+namespace Infrastructure.Core.Features.Entity;
 
 ///<inheritdoc/>
 internal class EntityUpdateService<TContext, TEntity, TKey, TEntityRequest>(

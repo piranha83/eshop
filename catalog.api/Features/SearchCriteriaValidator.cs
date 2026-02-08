@@ -1,5 +1,5 @@
 using FluentValidation;
-using Infrastructure.Core;
+using Infrastructure.Core.Features.Entity;
 
 namespace Catalog.Api.Features;
 

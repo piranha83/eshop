@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 
-namespace Infrastructure.Core;
+namespace Infrastructure.Core.Features.Entity;
 
 /// <summary>
 /// Фильтры.
@@ -43,9 +43,9 @@ public sealed class SearchCriteria
 
     public SearchCriteria(Dictionary<string, StringValues> term) => Term = term;
 
-    public void SetTerm(IHttpContextAccessor httpContextAccessor)
+    public void SetTerm(IQueryCollection? terms)
     {
-        Term = httpContextAccessor.HttpContext?.Request.Query
+        Term = terms?
             .Where(x => x.Key != "_page" && x.Key != "_limit" && x.Key != "_sort" && x.Key != "_order" && x.Key != "_include")
             .ToDictionary(x => x.Key, x => x.Value);
     }

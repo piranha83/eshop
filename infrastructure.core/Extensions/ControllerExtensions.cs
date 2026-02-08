@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using Infrastructure.Core.Abstractions;
+using Infrastructure.Core.Features.Entity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +19,7 @@ public static class ControllerExtensions
     where TContext : DbContext
     where TEntity : class, IEntity<TKey>
     where TKey : struct
-    where TEntityResponse: class
+    where TEntityResponse : class
     {
         routeGroupBuilder.MapGet("/", async (
             [AsParameters][Description("Фильтры")] SearchCriteria searchCriteria,
@@ -26,6 +27,7 @@ public static class ControllerExtensions
             CancellationToken ct) => await entityService.Find(searchCriteria, ct))
                 .Produces<List<TEntityResponse>>(StatusCodes.Status200OK, contentType: "application/json")
                 .Produces(StatusCodes.Status500InternalServerError)
+                .ProducesValidation()
                 .WithDescription("Извлечение и просмотр существующих данных");
 
         routeGroupBuilder.MapGet("/{id}", async (
@@ -34,6 +36,7 @@ public static class ControllerExtensions
             CancellationToken ct) => await entityService.Find(id, ct))
                 .Produces<TEntityResponse?>(StatusCodes.Status200OK, contentType: "application/json")
                 .Produces(StatusCodes.Status500InternalServerError)
+                .ProducesValidation()
                 .WithDescription("Извлечение и просмотр существующих данных");
         return routeGroupBuilder;
     }
@@ -52,6 +55,7 @@ public static class ControllerExtensions
                     .Produces<TKey>()
                     .Produces(StatusCodes.Status200OK)
                     .Produces(StatusCodes.Status500InternalServerError)
+                    .ProducesValidation()
                     .WithDescription("Добавление новой записи в базу данных");
         return routeGroupBuilder;
     }
@@ -70,6 +74,7 @@ public static class ControllerExtensions
             CancellationToken ct) => await entityService.Update(id, model, ct))
                 .Produces(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status500InternalServerError)
+                .ProducesValidation()
                 .WithDescription("Изменение или модификация уже имеющихся данных");
         return routeGroupBuilder;
     }
@@ -86,7 +91,28 @@ public static class ControllerExtensions
             CancellationToken ct) => await entityService.Delete(id, ct))
                 .Produces(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status500InternalServerError)
+                .ProducesValidation()
                 .WithDescription("Удаление записи из базы данных");
         return routeGroupBuilder;
+    }
+
+    private static RouteHandlerBuilder ProducesValidation(this RouteHandlerBuilder routeGroupBuilder)
+    {
+        return routeGroupBuilder.Produces(StatusCodes.Status400BadRequest)
+            .AddEndpointFilter(async (context, next) =>
+        {
+            try
+            {
+                return await next(context);
+            }
+            catch (ValidationApiException ex)
+            {
+                return Results.ValidationProblem(ex.Details, statusCode: StatusCodes.Status400BadRequest);
+            }
+            catch (Exception ex)
+            {
+                return Results.BadRequest(ex.Message);
+            }
+        });
     }
 }

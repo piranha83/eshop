@@ -1,7 +1,4 @@
-using Infrastructure.Core.Abstractions;
-using Microsoft.EntityFrameworkCore;
-
-namespace Infrastructure.Core.Extensions;
+namespace Infrastructure.Core.Features.Entity;
 
 /// <summary>
 /// Сервис удаления.

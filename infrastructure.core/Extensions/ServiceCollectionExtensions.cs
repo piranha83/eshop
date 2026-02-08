@@ -1,8 +1,11 @@
 using System.Reflection;
 using FluentValidation;
+using FluentValidation.Results;
+using Infrastructure.Core.Features.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace Infrastructure.Core.Extensions;
 
@@ -64,6 +67,6 @@ public static class ServiceCollectionExtensions
     {
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)
-            throw new ValidationException(validationResult.ToDictionary());
+            throw new ValidationApiException(validationResult.ToDictionary());
     }
 }
