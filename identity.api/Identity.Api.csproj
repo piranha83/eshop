@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
+    <PackageReference Include="OpenIddict.AspNetCore" Version="7.2.0" />
+    <PackageReference Include="OpenIddict.EntityFrameworkCore" Version="7.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="../certificates/server-encryption-certificate.pfx" />
+    <EmbeddedResource Include="../certificates/server-signing-certificate.pfx" />
+    <Content Include="../certificates/*.pfx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\infrastructure.core\Infrastructure.Core.csproj" />
+  </ItemGroup>
+
+</Project>

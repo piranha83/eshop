@@ -1,11 +1,9 @@
 using System.Reflection;
 using FluentValidation;
-using FluentValidation.Results;
 using Infrastructure.Core.Features.Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ValidationException = FluentValidation.ValidationException;
 
 namespace Infrastructure.Core.Extensions;
 
