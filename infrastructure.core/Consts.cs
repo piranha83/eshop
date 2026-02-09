@@ -9,8 +9,12 @@ public static class Consts
     public static readonly string ApplicationOrigin = "Application:Origin";
     public static readonly int UsersUnblockTimeMinutes = 15;
 
-    public static class ClaimsRole
+    [Flags]
+    public enum ClaimsRoles
     {
-        public const string CrudRoleName = "CRUD";
+        None = 0,
+        Viewer = 1 << 0,//1
+        Editor = 1 << 1,//2
+        Admin = 1 << 2,//4
     }
 }
