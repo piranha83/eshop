@@ -24,6 +24,28 @@ services:
     networks:
       - net
 
+  identity:
+    build:
+      context: .
+      dockerfile: ./identity.api/Dockerfile
+      args:
+        configuration: "Debug"
+    ports:
+      - "5096:80"
+      - "7255:443"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_URLS: https://+;http://+
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Password: password
+    restart: always
+    volumes:
+      - ${HOME}/.aspnet/dev-certs/trust:/https/
+    depends_on:
+      - postgres
+    networks:
+      - net
+
   catalog:
     build:
       context: .
@@ -42,7 +64,7 @@ services:
     volumes:
       - ${HOME}/.aspnet/dev-certs/trust:/https/
     depends_on:
-      - postgres
+      - identity
     networks:
       - net
 
