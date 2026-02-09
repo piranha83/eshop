@@ -14,6 +14,7 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.Property(x => x.ExternalId).HasMaxLength(128).IsRequired();
         builder.Property(x => x.UserName).HasMaxLength(50).IsRequired();
         builder.Property(x => x.PasswordHash).IsRequired();
+        builder.Property(x => x.Roles).IsRequired();
         builder.HasQueryFilter(b => !b.IsDeleted);
     }
 }

@@ -64,8 +64,8 @@ internal class PasswordFlowService(
             .SetClaim(Claims.Name, user.UserName)
             .SetClaim(Claims.Nonce, origin)
             .SetResources(request.GetResources())
-            .SetScopes(new[] { /*Scopes.OpenId, Scopes.OfflineAccess,*/ Scopes.Roles });
-            //.SetClaims(Claims.Role, [.. await userManager.GetRolesAsync(user)]); todo
+            .SetScopes(new[] { /*Scopes.OpenId, Scopes.OfflineAccess,*/ Scopes.Roles })
+            .SetClaims(Claims.Role, [.. await userService.GetRoles(user, cancellationToken)]);
 
         await context.SignInAsync(Scheme, principal: new ClaimsPrincipal(identity));
     }
@@ -87,8 +87,8 @@ internal class PasswordFlowService(
                 {
                     Permissions.Endpoints.Token,
                     Permissions.GrantTypes.Password,
-                    Permissions.GrantTypes.RefreshToken,
-                    Scopes.Roles,
+                    //Permissions.GrantTypes.RefreshToken,
+                    //Scopes.Roles,
                     Scopes.OpenId
                 },
             }, cancellationToken);

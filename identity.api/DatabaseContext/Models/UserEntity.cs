@@ -2,6 +2,7 @@ namespace Identity.Api.DatabaseContext.Models;
 
 using System.ComponentModel;
 using Infrastructure.Core.Abstractions;
+using static Infrastructure.Core.Consts;
 
 ///<inheritdoc/>
 public class UserEntity : IEntity<Guid>, IUpdated
@@ -53,4 +54,10 @@ public class UserEntity : IEntity<Guid>, IUpdated
     /// </summary>
     [Description("Маягко удален")]
     public bool IsDeleted { get; set; }
+
+    /// <summary>
+    /// Роли.
+    /// </summary>
+    [Description("Роли")]
+    public ClaimsRoles Roles { get; set; }
 }

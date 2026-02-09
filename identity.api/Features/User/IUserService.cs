@@ -1,5 +1,5 @@
-using System.Security.Claims;
 using Identity.Api.DatabaseContext.Models;
+using static Infrastructure.Core.Consts;
 
 namespace Identity.Api.Featres.User;
 
@@ -32,6 +32,31 @@ internal interface IUserService<IEntity>
     /// <param name="cancellationToken">Маркер отмены.</param>
     /// <returns>True если пароль польователя верный.</returns>
     Task<bool> CheckPasswordSignIn(IEntity user, string password, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Роли для пользователя.
+    /// </summary>
+    /// <param name="user">Пользователь.</param>
+    /// <param name="cancellationToken">Маркер отмены.</param>
+    /// <returns></returns>
+    Task<IEnumerable<string>> GetRoles(IEntity user, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Добавить пользователя.
+    /// </summary>
+    /// <param name="userName">Имя</param>
+    /// <param name="password">Пароль</param>
+    /// <param name="roles">Роли</param>
+    /// <param name="cancellationToken">Маркер отмены.</param>
+    /// <returns>True - создан.</returns>
+    Task<bool> Add(string userName, byte[] password, ClaimsRoles roles, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Разблокировать пользователей.
+    /// </summary>
+    /// <param name="cancellationToken">Маркер отмены.</param>
+    /// <returns>Сколько рзаблокировано.</returns>
+    Task<int> Unblock(CancellationToken cancellationToken = default);
 }
 
 /// <summary>

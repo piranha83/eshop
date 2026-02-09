@@ -1,8 +1,9 @@
+using Identity.Api.DatabaseContext;
 using Identity.Api.Featres.Flow;
 using Identity.Api.Featres.User;
 using Infrastructure.Core;
-using Infrastructure.Core.Abstractions;
 using OpenIddict.Abstractions;
+using static Infrastructure.Core.Consts;
 
 namespace Identity.Api.Featres.Job;
 
@@ -39,12 +40,13 @@ internal partial class IdentityJob(
     private async Task InitDb(CancellationToken cancellationToken)
     {
         using var scope = serviceProvider.CreateScope();
-
-        var userService = scope.ServiceProvider.GetRequiredService<UserService>();
+        await scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.EnsureCreatedAsync(cancellationToken);
+        
+        var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
         var flowService = scope.ServiceProvider.GetRequiredService<IFlowService>();
 
-        await userService.Add("Admin", "vs6_@^>7X;~,t$B#_Jkkg6r".Hash512(), cancellationToken);
-        await userService.Add("Client", "7k=9r8F".Hash512(), cancellationToken);
+        await userService.Add("Admin", "vs6_@^>7X;~,t$B#_Jkkg6r".Hash512(), ClaimsRoles.Admin, cancellationToken);
+        await userService.Add("Client", "7k=9r8F".Hash512(), ClaimsRoles.Viewer, cancellationToken);
         await flowService.AddApplication(cancellationToken);
     }
 
@@ -52,7 +54,7 @@ internal partial class IdentityJob(
     {
         using var scope = serviceProvider.CreateScope();
 
-        var userService = scope.ServiceProvider.GetRequiredService<UserService>();
+        var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
         var tokenService = scope.ServiceProvider.GetRequiredService<IOpenIddictTokenManager>();
         logger.LogInformation($"Отозвано {await tokenService.PruneAsync(DateTimeOffset.UtcNow.AddMinutes(-Consts.UsersUnblockTimeMinutes), cancellationToken)} токенов.");
         logger.LogInformation($"Разблокировано {await userService.Unblock(cancellationToken)} пользователей.");
