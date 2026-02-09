@@ -88,8 +88,8 @@ internal class PasswordFlowService(
                     Permissions.Endpoints.Token,
                     Permissions.GrantTypes.Password,
                     //Permissions.GrantTypes.RefreshToken,
-                    //Scopes.Roles,
-                    Scopes.OpenId
+                    Scopes.Roles,
+                    //Scopes.OpenId
                 },
             }, cancellationToken);
         }
