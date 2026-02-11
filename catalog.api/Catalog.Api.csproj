@@ -13,6 +13,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="7.2.0" />
+    <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="7.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.2" />
   </ItemGroup>
 
@@ -29,4 +31,5 @@
   <ItemGroup>
     <ProjectReference Include="..\infrastructure.core\Infrastructure.Core.csproj" />
   </ItemGroup>
+
 </Project>

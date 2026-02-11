@@ -13,8 +13,6 @@ internal class UserService(
     int lockoutAttempts = 5)
     : IUserService
 {
-    private readonly IEnumerable<ClaimsRoles> roles = Enum.GetValues(typeof(ClaimsRoles)).Cast<ClaimsRoles>();
-
     ///<inheritdoc/>
     public Task<UserEntity?> FindByName(string userName, CancellationToken cancellationToken = default) =>
         context.Users.FirstOrDefaultAsync(x => x.UserName == userName, cancellationToken);
@@ -78,10 +76,6 @@ internal class UserService(
     }
 
     ///<inheritdoc/>
-    public Task<IEnumerable<string>> GetRoles(UserEntity user, CancellationToken cancellationToken)
-    {
-        return Task.FromResult(roles
-            .Where(x => user.Roles.HasFlag(x) && !x.Equals(Enum.Parse(typeof(ClaimsRoles), ClaimsRoles.None.ToString())))
-            .Select(x => x.ToString()));
-    }
+    public Task<IEnumerable<string>> GetRoles(UserEntity user, CancellationToken cancellationToken) =>
+        Task.FromResult<IEnumerable<string>>([user.Roles.ToString()]);
 }
