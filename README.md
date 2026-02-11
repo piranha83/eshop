@@ -5,13 +5,21 @@ Run `docker compose up` for for a prod server(moq) and client. Navigate Eshop cl
 # Moq service
 This moq server was generated with [json-server](https://hub.docker.com/r/clue/json-server).
 
+# Identity api service
+
+This catalog project was generated with [dotnet core].
+
+### Development
+
+Run `dotnet run` for a dev server. Navigate to  `curl -X POST https://localhost:7255/oauth/token -H "accept: application/json" -H "Content-Type: application/x-www-form-urlencoded" -k -d "grant_type=[grand type]&client_id=[client]&&username=[user]&password=[user password]&scope=catalog-api"`.
+
 # Catalog api service
 
 This catalog project was generated with [dotnet core].
 
 ### Development
 
-Run `dotnet run` for a dev server. Navigate to  `https://localhost:7259/openapi/v1.json` or `http://localhost:3000/products`.
+Run `dotnet run` for a dev server. Navigate to  `https://localhost:7259/swagger` or `http://localhost:3000/products`.
 
 ### Add migrations
 
