@@ -1,20 +1,21 @@
+using System.Security.Claims;
 using Catalog.Api.DatabaseContext;
 using Catalog.Api.DatabaseContext.Models;
 using Catalog.Api.Extensions;
 using Catalog.Api.Featres.Job;
 using Catalog.Api.Features.Product;
 using FluentValidation;
-using Infrastructure.Core;
 using Infrastructure.Core.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddClientFlow(builder.Configuration);
 builder.Services.AddCrudServices();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 // Web
-builder.Services.AddCorsPolicy(Consts.ApplicationOrigin, builder.Configuration);
+builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddHttpLogging();
-builder.Services.AddEndpointsApiExplorer().AddSwaggerGen();
+builder.Services.AddEndpointsApiExplorer().AddSwagger();
 builder.Services.AddHttpContextAccessor();
 //
 builder.Services.AddContext<ApplicationDbContext>(builder.Configuration);
@@ -41,6 +42,7 @@ else
     app.UseHttpsRedirection();
 }
 
-app.UseCors(Consts.ApplicationOrigin);
+app.UseCorsPolicy();
+app.UseClientFlow();
 
 app.Run();

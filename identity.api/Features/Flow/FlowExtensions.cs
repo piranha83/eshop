@@ -22,6 +22,7 @@ internal static class FlowExtensions
         services
             .AddTransient<IUserService, UserService>()
             .AddTransient<IFlowService, PasswordFlowService>()
+            .AddTransient<IInitService, InitService>()
             .AddHostedService<IdentityJob>()
             .AddOpenIddict();
 
@@ -40,7 +41,8 @@ internal static class FlowExtensions
         .AddServer(options => options
             .AddPasswordFlowServer()
             // Certificate
-            .AddEncryptionCertificate(typeof(Program).Assembly, "Identity.Api.server-encryption-certificate.pfx", null)
+            .AddEphemeralEncryptionKey().DisableAccessTokenEncryption()
+            //.AddEncryptionCertificate(typeof(Program).Assembly, "Identity.Api.server-encryption-certificate.pfx", null)
             .AddSigningCertificate(typeof(Program).Assembly, "Identity.Api.server-signing-certificate.pfx", null)
             // Handle authorization requests in a MVC.
             .UseAspNetCore()
@@ -54,7 +56,7 @@ internal static class FlowExtensions
     {
         app.UseAuthorization().UseAuthentication();
         app.MapMethods(Consts.TokenEndpointUrl, [HttpMethods.Post], (IFlowService service) => service.Token());
-        app.MapMethods(Consts.UnauthorizeUrl, [HttpMethods.Post], (IFlowService service) => service.End());
+        //app.MapMethods(Consts.UnauthorizeUrl, [HttpMethods.Post], (IFlowService service) => service.Token());
     }
 
     internal static byte[] Hash512(this string? password) =>
@@ -62,8 +64,9 @@ internal static class FlowExtensions
 
     private static OpenIddictServerBuilder AddPasswordFlowServer(this OpenIddictServerBuilder options) =>
         options.SetTokenEndpointUris(Consts.TokenEndpointUrl)
+            //.SetEndSessionEndpointUris(Consts.UnauthorizeUrl)
             .AllowPasswordFlow()
-            .AllowRefreshTokenFlow()
+            //.AllowRefreshTokenFlow()
             .SetAccessTokenLifetime(TimeSpan.FromMinutes(15))
             .SetRefreshTokenLifetime(TimeSpan.FromHours(24));
 }

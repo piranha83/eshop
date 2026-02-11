@@ -55,7 +55,10 @@ public static class ControllerExtensions
                     .Produces<TKey>()
                     .Produces(StatusCodes.Status200OK)
                     .Produces(StatusCodes.Status500InternalServerError)
+                    .Produces(StatusCodes.Status401Unauthorized)
+                    .Produces(StatusCodes.Status403Forbidden)
                     .ProducesValidation()
+                    .RequireAuthorization(Consts.Policy.Admin)
                     .WithDescription("Добавление новой записи в базу данных");
         return routeGroupBuilder;
     }
@@ -74,7 +77,10 @@ public static class ControllerExtensions
             CancellationToken ct) => await entityService.Update(id, model, ct))
                 .Produces(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status500InternalServerError)
+                .Produces(StatusCodes.Status401Unauthorized)
+                .Produces(StatusCodes.Status403Forbidden)
                 .ProducesValidation()
+                .RequireAuthorization(Consts.Policy.Admin)
                 .WithDescription("Изменение или модификация уже имеющихся данных");
         return routeGroupBuilder;
     }
@@ -91,7 +97,10 @@ public static class ControllerExtensions
             CancellationToken ct) => await entityService.Delete(id, ct))
                 .Produces(StatusCodes.Status200OK)
                 .Produces(StatusCodes.Status500InternalServerError)
+                .Produces(StatusCodes.Status401Unauthorized)
+                .Produces(StatusCodes.Status403Forbidden)
                 .ProducesValidation()
+                .RequireAuthorization(Consts.Policy.Admin)
                 .WithDescription("Удаление записи из базы данных");
         return routeGroupBuilder;
     }

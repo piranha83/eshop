@@ -1,6 +1,7 @@
 using System.Reflection;
 using FluentValidation;
 using Infrastructure.Core.Features.Entity;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,18 +30,14 @@ public static class ServiceCollectionExtensions
         await context.Database.EnsureCreatedAsync();
     }
 
-    public static IServiceCollection AddCorsPolicy(this IServiceCollection serviceCollection, string policy, IConfiguration configuration)
+    public static IServiceCollection AddCorsPolicy(this IServiceCollection serviceCollection, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(serviceCollection);
-        ArgumentNullException.ThrowIfNull(configuration);
 
-        var origin = configuration.GetSection(Consts.ApplicationOrigin).Value;
-        ArgumentException.ThrowIfNullOrEmpty(origin);
-
-        return serviceCollection.AddCors(options => options.AddPolicy(policy, policy => policy
+        return serviceCollection.AddCors(options => options.AddPolicy("Policy", policy => policy
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .WithOrigins(origin)));
+            .WithOrigins(configuration.GetCatalogApiUrl(), configuration.GetIdentityApiUrl())));
     }
 
     public static IServiceCollection AddMapper(this IServiceCollection serviceCollection, Assembly assembly)
@@ -66,5 +63,10 @@ public static class ServiceCollectionExtensions
         var validationResult = await validator.ValidateAsync(model);
         if (!validationResult.IsValid)
             throw new ValidationApiException(validationResult.ToDictionary());
+    }
+
+    public static IApplicationBuilder UseCorsPolicy(this IApplicationBuilder app)
+    {
+        return app.UseCors("Policy");
     }
 }

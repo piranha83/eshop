@@ -43,11 +43,11 @@ internal partial class IdentityJob(
         await scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.EnsureCreatedAsync(cancellationToken);
         
         var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
-        var flowService = scope.ServiceProvider.GetRequiredService<IFlowService>();
+        var flowService = scope.ServiceProvider.GetRequiredService<IInitService>();
 
-        await userService.Add("Admin", "vs6_@^>7X;~,t$B#_Jkkg6r".Hash512(), ClaimsRoles.Admin, cancellationToken);
+        await userService.Add("Admin", "vs6_@>7Xt_Jkkg6r".Hash512(), ClaimsRoles.Admin, cancellationToken);
         await userService.Add("Client", "7k=9r8F".Hash512(), ClaimsRoles.Viewer, cancellationToken);
-        await flowService.AddApplication(cancellationToken);
+        await flowService.Init(cancellationToken);
     }
 
     private async Task Cleanup(CancellationToken cancellationToken)
