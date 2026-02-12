@@ -4,7 +4,7 @@ services:
     plan: free
     env: docker
     dockerContext: .
-    dockerfilePath: ./catalog.api/Dockerfile.render
+    dockerfilePath: ./catalog.api/DockerfileRender
     envVars:
     - key: PORT
       value: 7259
