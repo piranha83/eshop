@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: catalog
+    plan: free
+    env: docker
+    dockerContext: .
+    dockerfilePath: ./catalog.api/Dockerfile
+    envVars:
+    - key: PORT
+      value: 7259
+    - key: DB_URL
+      fromDatabase:
+        name: postgres
+        property: connectionString
+
+databases:
+  - name: postgres
+    plan: free # or starter
+    postgresMajorVersion: 16
