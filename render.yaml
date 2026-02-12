@@ -4,20 +4,12 @@ services:
     plan: free
     env: docker
     dockerContext: .
-    dockerfilePath: ./catalog.api/DockerfileRender
+    dockerfilePath: ./catalog.api/render
     envVars:
     - key: PORT
       value: 7259
     - key: ASPNETCORE_ENVIRONMENT
       value: Docker
-    - key: configuration
-      value: Debug
-    - key: ASPNETCORE_URLS
-      value: https://+;http://+
-    - key: ASPNETCORE_Kestrel__Certificates__Default__Path
-      value: /https/aspnetapp.pfx
-    - key: ASPNETCORE_Kestrel__Certificates__Default__Password
-      value: password
     - key: DB_URL
       fromDatabase:
         name: postgres
