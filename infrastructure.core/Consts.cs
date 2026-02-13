@@ -11,7 +11,7 @@ public static class Consts
     /// <summary>
     /// Render handles the SSL certificate automatically at the edge
     /// </summary>
-    public static readonly string Render = "render";
+    public static readonly string Https = "https";
 
     [Flags]
     public enum ClaimsRoles

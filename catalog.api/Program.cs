@@ -38,7 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger().UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
-else if(!app.Environment.IsEnvironment(Consts.Render))
+else if(app.Environment.IsEnvironment(Consts.Https))
 {
     app.UseHttpsRedirection();
 }
