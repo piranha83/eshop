@@ -21,6 +21,14 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddContext<ApplicationDbContext>(builder.Configuration);
 builder.Services.AddMapper(typeof(Program).Assembly);
 builder.Services.AddHostedService<InitJob>();
+// render
+var render = builder.Environment.IsEnvironment("render");
+if (render)
+{
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+    });
+}
 
 var app = builder.Build();
 
@@ -38,19 +46,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger().UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
-else if(app.Environment.IsProduction())
+else if (app.Environment.IsProduction())
 {
     Console.WriteLine("Production");
+    app.UseHttpsRedirection();
+}
+
+if (render)
+{
+    Console.WriteLine("render");
     // proxy render
     app.UseForwardedHeaders(new ForwardedHeadersOptions
     {
         ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-    });    
-}
-else if (app.Environment.IsStaging())
-{
-    Console.WriteLine("Production");
-    app.UseHttpsRedirection();
+    });
 }
 
 app.UseCorsPolicy();
