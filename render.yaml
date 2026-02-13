@@ -10,6 +10,10 @@ services:
       - port: 80
         http: true
     envVars:
+      - key: render
+        value: true
+      - key: ASPNETCORE_URLS
+        value: http://+
       - key: DB_URL
         fromDatabase:
           name: postgres
