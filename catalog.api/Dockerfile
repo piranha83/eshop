@@ -16,7 +16,7 @@ RUN dotnet build -c ${configuration} -o /app/build
 
 FROM build AS publish
 ARG configuration
-RUN dotnet dev-certs https
+RUN mkdir -p /https && dotnet dev-certs https -v -ep /https/aspnetapp.pfx -p yourpassword
 RUN dotnet publish -c ${configuration} -o /app/publish
 
 FROM base AS final
