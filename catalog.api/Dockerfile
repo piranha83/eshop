@@ -16,7 +16,6 @@ RUN dotnet build -c ${configuration} -o /app/build
 
 FROM build AS publish
 ARG configuration
-RUN dotnet dev-certs https --trust
 RUN dotnet publish -c ${configuration} -o /app/publish
 
 FROM base AS final
