@@ -49,7 +49,7 @@ services:
   catalog:
     build:
       context: .
-      dockerfile: ./catalog.api/Dockerfile
+      dockerfile: ./catalog.api/Dockerfile.local
       args:
         configuration: "Debug"
     ports:

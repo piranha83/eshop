@@ -12,12 +12,11 @@ WORKDIR /src
 COPY ["identity.api/Identity.Api.csproj", "identity.api/"]
 COPY . .
 WORKDIR /src/identity.api
-RUN dotnet build -c ${configuration} -o /app/build
+RUN dotnet build -c Debug -o /app/build
 
 FROM build AS publish
 ARG configuration
-RUN dotnet dev-certs https --trust
-RUN dotnet publish -c ${configuration} -o /app/publish
+RUN dotnet publish -c Debug -o /app/publish
 
 FROM base AS final
 WORKDIR /app
