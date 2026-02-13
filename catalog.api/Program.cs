@@ -1,11 +1,9 @@
-using System.Security.Claims;
 using Catalog.Api.DatabaseContext;
 using Catalog.Api.DatabaseContext.Models;
 using Catalog.Api.Extensions;
 using Catalog.Api.Featres.Job;
 using Catalog.Api.Features.Product;
 using FluentValidation;
-using Infrastructure.Core;
 using Infrastructure.Core.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,11 +33,13 @@ app.UseImgFiles(builder.Environment.ContentRootPath);
 
 if (app.Environment.IsDevelopment())
 {
+    app.Logger.LogInformation("Development");
     app.UseSwagger().UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
-else if(app.Environment.IsEnvironment(Consts.Https))
+else if(app.Environment.IsProduction())
 {
+    app.Logger.LogInformation("Production");
     app.UseHttpsRedirection();
 }
 

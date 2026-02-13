@@ -1,22 +1,15 @@
+# Render handles the SSL certificate automatically at the edge
 services:
   - type: web
     name: catalog
     plan: free
     env: docker
     dockerContext: .
-    dockerfilePath: ./catalog.api/Dockerfile
+    dockerfilePath: ./catalog.api/render.Dockerfile
     ports:
       - port: 80
         http: true
     envVars:
-      - key: render
-        value: 
-      - key: ASPNETCORE_URLS
-        value: http://+:80
-      # ASP.NET Core will still redirect HTTP to HTTPS at the app level if configured
-      # Render handles the SSL certificate automatically at the edge
-      - key: ASPNETCORE_ENVIRONMENT
-        value: Docker
       - key: DB_URL
         fromDatabase:
           name: postgres
