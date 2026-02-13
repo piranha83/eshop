@@ -4,12 +4,7 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-RUN apt-get update && apt-get install -y ca-certificates
-
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-
-RUN mkdir -p /aspnet/https
-RUN dotnet dev-certs https -v -ep /aspnet/https/aspnetapp.pfx -p password
 
 ARG configuration
 WORKDIR /src
