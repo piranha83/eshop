@@ -8,10 +8,10 @@ WORKDIR /src
 COPY ["catalog.api/Catalog.Api.csproj", "catalog.api/"]
 COPY . .
 WORKDIR /src/catalog.api
-RUN dotnet build -c Development -o /app/build
+RUN dotnet build -c Production -o /app/build
 
 FROM build AS publish
-RUN dotnet publish -c Development -o /app/publish
+RUN dotnet publish -c Production -o /app/publish
 
 FROM base AS final
 WORKDIR /app

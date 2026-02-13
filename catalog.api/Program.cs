@@ -5,6 +5,7 @@ using Catalog.Api.Featres.Job;
 using Catalog.Api.Features.Product;
 using FluentValidation;
 using Infrastructure.Core.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,13 +34,22 @@ app.UseImgFiles(builder.Environment.ContentRootPath);
 
 if (app.Environment.IsDevelopment())
 {
-    app.Logger.LogInformation("Development");
+    Console.WriteLine("Development");
     app.UseSwagger().UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
 else if(app.Environment.IsProduction())
 {
-    app.Logger.LogInformation("Production");
+    Console.WriteLine("Production");
+    // proxy render
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+    });    
+}
+else if (app.Environment.IsStaging())
+{
+    Console.WriteLine("Production");
     app.UseHttpsRedirection();
 }
 
