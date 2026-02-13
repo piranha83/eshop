@@ -9,6 +9,8 @@ services:
       - port: 80
         http: true
     envVars:
+      - key: 
+        value: http://+:80
       - key: ASPNETCORE_URLS
         value: http://+:80
       # ASP.NET Core will still redirect HTTP to HTTPS at the app level if configured

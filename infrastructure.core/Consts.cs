@@ -8,6 +8,11 @@ public static class Consts
     public static readonly string AuthorizationFlowError = "Identity flow error";
     public static readonly int UsersUnblockTimeMinutes = 15;
 
+    /// <summary>
+    /// Render handles the SSL certificate automatically at the edge
+    /// </summary>
+    public static readonly string Render = "render";
+
     [Flags]
     public enum ClaimsRoles
     {

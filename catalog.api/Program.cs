@@ -5,6 +5,7 @@ using Catalog.Api.Extensions;
 using Catalog.Api.Featres.Job;
 using Catalog.Api.Features.Product;
 using FluentValidation;
+using Infrastructure.Core;
 using Infrastructure.Core.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,7 +38,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger().UseSwaggerUI();
     app.UseDeveloperExceptionPage();
 }
-else
+else if(!app.Environment.IsEnvironment(Consts.Render))
 {
     app.UseHttpsRedirection();
 }
