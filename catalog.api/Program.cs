@@ -22,11 +22,12 @@ builder.Services.AddContext<ApplicationDbContext>(builder.Configuration);
 builder.Services.AddMapper(typeof(Program).Assembly);
 builder.Services.AddHostedService<InitJob>();
 // render
-var render = builder.Environment.IsDevelopment();//builder.Environment.IsEnvironment("render");
+var render = true;//builder.Environment.IsDevelopment();//builder.Environment.IsEnvironment("render");
 if (render)
 {
-    builder.WebHost.ConfigureKestrel(options =>
+    builder.WebHost.ConfigureKestrel(serverOptions =>
     {
+        serverOptions.ListenAnyIP(80);
     });
 }
 
