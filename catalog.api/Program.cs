@@ -22,13 +22,7 @@ builder.Services.AddContext<ApplicationDbContext>(builder.Configuration);
 builder.Services.AddMapper(typeof(Program).Assembly);
 builder.Services.AddHostedService<InitJob>();
 // render
-var render = builder.Environment.IsEnvironment("render");
-if (render)
-{
-    builder.WebHost.ConfigureKestrel(options =>
-    {
-    });
-}
+var render = builder.Environment.IsDevelopment();//builder.Environment.IsEnvironment("render");
 
 var app = builder.Build();
 

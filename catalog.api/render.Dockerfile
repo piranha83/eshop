@@ -4,6 +4,8 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
+ENV render=true
+
 WORKDIR /src
 COPY ["catalog.api/Catalog.Api.csproj", "catalog.api/"]
 COPY . .
