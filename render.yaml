@@ -7,13 +7,13 @@ services:
     dockerContext: .
     dockerfilePath: ./catalog.api/render.Dockerfile
     ports:
-      - port: 80
+      - port: 1000
         http: true
     envVars:
       - key: render
         value: true
       - key: ASPNETCORE_URLS
-        value: http://+
+        value: http://+:1000
       - key: DB_URL
         fromDatabase:
           name: postgres
