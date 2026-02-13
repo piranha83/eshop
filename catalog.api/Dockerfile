@@ -7,6 +7,10 @@ EXPOSE 443
 RUN apt-get update && apt-get install -y ca-certificates
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+
+RUN mkdir -p /aspnet/https
+RUN dotnet dev-certs https -v -ep /aspnet/https/aspnetapp.pfx -p password
+
 ARG configuration
 WORKDIR /src
 COPY ["catalog.api/Catalog.Api.csproj", "catalog.api/"]
@@ -16,7 +20,6 @@ RUN dotnet build -c ${configuration} -o /app/build
 
 FROM build AS publish
 ARG configuration
-RUN mkdir -p /https && dotnet dev-certs https -v -ep /https/aspnetapp.pfx -p yourpassword
 RUN dotnet publish -c ${configuration} -o /app/publish
 
 FROM base AS final
