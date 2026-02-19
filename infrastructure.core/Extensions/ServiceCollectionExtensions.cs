@@ -3,8 +3,11 @@ using FluentValidation;
 using Infrastructure.Core.Features.Entity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 
 namespace Infrastructure.Core.Extensions;
 
@@ -26,8 +29,19 @@ public static class ServiceCollectionExtensions
     public static async Task EnsureCreated<TContext>(this IServiceScope scope)
     where TContext : DbContext
     {
-        var context = scope.ServiceProvider.GetRequiredService<TContext>();
-        await context.Database.EnsureCreatedAsync();
+        try
+        {
+            var context = scope.ServiceProvider.GetRequiredService<TContext>();
+            var databaseCreator = context.Database.GetService<IRelationalDatabaseCreator>();
+            if (await databaseCreator.CanConnectAsync())
+            {
+                await databaseCreator.CreateTablesAsync();
+            }
+        }
+        catch (PostgresException ex) when (ex.MessageText.Contains("already exists"))
+        {
+            //Riden hot fix
+        }
     }
 
     public static IServiceCollection AddCorsPolicy(this IServiceCollection serviceCollection, IConfiguration configuration)

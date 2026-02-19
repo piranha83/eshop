@@ -4,6 +4,7 @@ using Identity.Api.DatabaseContext;
 using Identity.Api.Featres.Job;
 using Identity.Api.Featres.User;
 using Infrastructure.Core;
+using Infrastructure.Core.Extensions;
 using Microsoft.EntityFrameworkCore;
 using OpenIddict.Validation.AspNetCore;
 
@@ -41,9 +42,7 @@ internal static class FlowExtensions
         .AddServer(options => options
             .AddPasswordFlowServer()
             // Certificate
-            .AddEphemeralEncryptionKey().DisableAccessTokenEncryption()
-            //.AddEncryptionCertificate(typeof(Program).Assembly, "Identity.Api.server-encryption-certificate.pfx", null)
-            .AddSigningCertificate(typeof(Program).Assembly, "Identity.Api.server-signing-certificate.pfx", null)
+            .AddSigningCertificate().AddEncryptionCertificate(configuration)
             // Handle authorization requests in a MVC.
             .UseAspNetCore()
             .EnableTokenEndpointPassthrough()
@@ -57,6 +56,28 @@ internal static class FlowExtensions
         app.UseAuthorization().UseAuthentication();
         app.MapMethods(Consts.TokenEndpointUrl, [HttpMethods.Post], (IFlowService service) => service.Token());
         //app.MapMethods(Consts.UnauthorizeUrl, [HttpMethods.Post], (IFlowService service) => service.Token());
+    }
+
+    internal static OpenIddictServerBuilder AddSigningCertificate(this OpenIddictServerBuilder serverBuilder)
+    {
+        using var stream = new FileStream(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "certificates", "server-signing-certificate.pfx"), FileMode.Open);
+        serverBuilder.AddSigningCertificate(stream, null);
+        return serverBuilder;
+    }
+
+    internal static OpenIddictServerBuilder AddEncryptionCertificate(this OpenIddictServerBuilder serverBuilder, IConfiguration configuration)
+    {
+        if (configuration.IsRender()) /*for tests*/
+        {
+            serverBuilder.AddEphemeralEncryptionKey().DisableAccessTokenEncryption();
+        }
+        else
+        {
+            using var stream = new FileStream(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "certificates", "server-encryption-certificate.pfx"), FileMode.Open);
+            serverBuilder.AddEncryptionCertificate(stream, null);            
+        }
+
+        return serverBuilder;
     }
 
     internal static byte[] Hash512(this string? password) =>

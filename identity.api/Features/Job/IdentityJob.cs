@@ -2,6 +2,7 @@ using Identity.Api.DatabaseContext;
 using Identity.Api.Featres.Flow;
 using Identity.Api.Featres.User;
 using Infrastructure.Core;
+using Infrastructure.Core.Extensions;
 using OpenIddict.Abstractions;
 using static Infrastructure.Core.Consts;
 
@@ -40,8 +41,8 @@ internal partial class IdentityJob(
     private async Task InitDb(CancellationToken cancellationToken)
     {
         using var scope = serviceProvider.CreateScope();
-        await scope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.EnsureCreatedAsync(cancellationToken);
-        
+        await scope.EnsureCreated<ApplicationDbContext>();
+
         var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
         var flowService = scope.ServiceProvider.GetRequiredService<IInitService>();
 

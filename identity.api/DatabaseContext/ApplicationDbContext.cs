@@ -24,4 +24,11 @@ internal class ApplicationDbContext : DbContext
         base.ChangeTracker.Tracker(null);
         return await base.SaveChangesAsync(cancellationToken);
     }
+
+    ///<inheritdoc/>
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.HasDefaultSchema("identity");
+        base.OnModelCreating(modelBuilder);
+    }
 }
