@@ -26,9 +26,9 @@ export class HttpDataService {
     if(filter.term != '')
       param = param.set('name_like', filter.term);
     if(filter.sort == 'PriceAsc')
-      param = param.set('_sort', 'price').set('_order', 'asc');
+      param = param.set('_sort', 'Price').set('_order', 'Asc');
     if(filter.sort == 'PriceDesc')
-      param = param.set('_sort', 'price').set('_order', 'desc');
+      param = param.set('_sort', 'Price').set('_order', 'Desc');
     if(filter.toggle == 'HasDiscount')
       param = param.set('discount_ne', '0');
     if(filter.toggle == 'InStock')

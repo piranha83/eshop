@@ -20,8 +20,7 @@ public static class DbExtensions
     where TEntity : class, IEntity<TKey>
     where TKey: struct
     {
-        if (searchCriteria.Editable != true)
-            data = data.AsNoTracking();
+        data = data.AsNoTracking();
         if (searchCriteria.Include != null)
             data = data.Include(searchCriteria.Include.Trim());
         if (searchCriteria.Term != null)
