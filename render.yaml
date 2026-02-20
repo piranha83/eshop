@@ -78,7 +78,7 @@ services:
     plan: free
     region: oregon
     dockerContext: ./eshop
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: ./eshop/Dockerfile
     autoDeployTrigger: off
 
 databases:
