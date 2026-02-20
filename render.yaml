@@ -67,8 +67,8 @@ services:
     branch: render
     plan: free
     region: oregon
-    dockerContext: .
-    dockerfilePath: ./eshop/Dockerfile
+    dockerContext: ./eshop
+    dockerfilePath: Dockerfile
     autoDeployTrigger: off
 
 databases:

@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
-COPY ./src/scripts/maplibre-gl.js .
+COPY /src/scripts/maplibre-gl.js .
 RUN npm run build --configuration=production
 
 # Stage 2: Запуск nginx
