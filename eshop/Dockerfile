@@ -9,7 +9,6 @@ RUN npm run build --configuration=production
 
 # Stage 2: Запуск nginx
 FROM nginx:alpine
-COPY webnginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 EXPOSE 80
 EXPOSE 1000

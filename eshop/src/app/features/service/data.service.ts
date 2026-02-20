@@ -6,7 +6,7 @@ import { Filter } from "../toggle/toggle.type";
 
 export class HttpDataService {
   readonly headers = new HttpHeaders().set("Content-Type", "application/json");
-  readonly url: string = environment.url + 'products/';
+  readonly url: string = environment.url + 'product/';
 
   constructor(readonly http: HttpClient) {}
 

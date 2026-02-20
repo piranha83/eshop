@@ -19,7 +19,7 @@ This catalog project was generated with [dotnet core].
 
 ### Development
 
-Run `dotnet run` for a dev server. Navigate to  `https://localhost:7259/swagger` or `http://localhost:3000/products`.
+Run `dotnet run` for a dev server. Navigate to  `https://localhost:7259/swagger` or `http://localhost:3000/product`.
 
 ### Add migrations
 
