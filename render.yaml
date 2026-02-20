@@ -21,6 +21,11 @@ services:
           name: identity
           type: web
           envVarKey: RENDER_EXTERNAL_URL
+      - key: Frontend__Url
+        fromService:
+          name: frontend
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
       - key: DB_URL
         fromDatabase:
           name: postgres
@@ -49,6 +54,11 @@ services:
       - key: IdentityApi__Url
         fromService:
           name: identity
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: Frontend__Url
+        fromService:
+          name: frontend
           type: web
           envVarKey: RENDER_EXTERNAL_URL
       - key: DB_URL
