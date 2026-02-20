@@ -13,6 +13,9 @@ public static class ConfigurationExtensions
     public static string GetIdentityApiUrl(this IConfiguration configuration) =>
         configuration.GetString("IdentityApi:Url");
 
+    public static string FrontendUrl(this IConfiguration configuration) =>
+        configuration.GetString("Frontend:Url");
+
     public static bool IsRender(this IConfiguration configuration) =>
         !string.IsNullOrEmpty(configuration["render"]);
 

@@ -51,7 +51,7 @@ public static class ServiceCollectionExtensions
         return serviceCollection.AddCors(options => options.AddPolicy("Policy", policy => policy
             .AllowAnyHeader()
             .AllowAnyMethod()
-            .WithOrigins(configuration.GetCatalogApiUrl(), configuration.GetIdentityApiUrl())));
+            .WithOrigins(configuration.GetCatalogApiUrl(), configuration.GetIdentityApiUrl(), configuration.FrontendUrl())));
     }
 
     public static IServiceCollection AddMapper(this IServiceCollection serviceCollection, Assembly assembly)
