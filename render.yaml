@@ -1,0 +1,87 @@
+version: "1"
+services:
+  - type: web
+    name: catalog
+    runtime: docker
+    repo: https://github.com/piranha83/eshop
+    branch: render
+    plan: free
+    envVars:
+      - key: ConnectionStrings__Default
+        sync: false
+      - key: render
+        value: true
+      - key: CatalogApi__Url
+        fromService:
+          name: catalog
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: IdentityApi__Url
+        fromService:
+          name: identity
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: Frontend__Url
+        fromService:
+          name: frontend
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: DB_URL
+        fromDatabase:
+          name: postgres
+          property: connectionString
+    region: oregon
+    dockerContext: .
+    dockerfilePath: ./catalog.api/Dockerfile
+    autoDeployTrigger: off
+
+  - type: web
+    name: identity
+    runtime: docker
+    repo: https://github.com/piranha83/eshop
+    branch: render
+    plan: free
+    envVars:
+      - key: ConnectionStrings__Default
+        sync: false
+      - key: render
+        value: true
+      - key: CatalogApi__Url
+        fromService:
+          name: catalog
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: IdentityApi__Url
+        fromService:
+          name: identity
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: Frontend__Url
+        fromService:
+          name: frontend
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: DB_URL
+        fromDatabase:
+          name: postgres
+          property: connectionString
+    region: oregon
+    dockerContext: .
+    dockerfilePath: ./identity.api/Dockerfile
+    autoDeployTrigger: off
+
+  - type: web
+    name: frontend
+    runtime: docker
+    repo: https://github.com/piranha83/eshop
+    branch: render
+    plan: free
+    region: oregon
+    dockerContext: ./eshop
+    dockerfilePath: ./eshop/Dockerfile
+    autoDeployTrigger: off
+
+databases:
+  - name: postgres
+    plan: free
+    postgresMajorVersion: 16

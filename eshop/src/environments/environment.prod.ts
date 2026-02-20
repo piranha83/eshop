@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  url: 'https://piranha83.github.io/eshop/'
+  url: 'https://catalog-r711.onrender.com/'
 };

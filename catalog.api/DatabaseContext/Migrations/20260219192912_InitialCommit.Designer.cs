@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Catalog.Api.DatabaseContext.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260113120131_InitialCommit")]
+    [Migration("20260219192912_InitialCommit")]
     partial class InitialCommit
     {
         /// <inheritdoc />
@@ -20,6 +20,7 @@ namespace Catalog.Api.DatabaseContext.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("catalog")
                 .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -54,7 +55,7 @@ namespace Catalog.Api.DatabaseContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Catalogs");
+                    b.ToTable("Catalogs", "catalog");
                 });
 
             modelBuilder.Entity("Catalog.Api.DatabaseContext.Models.ProductModel", b =>
@@ -104,7 +105,7 @@ namespace Catalog.Api.DatabaseContext.Migrations
 
                     b.HasIndex("CatalogId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", "catalog");
                 });
 
             modelBuilder.Entity("Catalog.Api.DatabaseContext.Models.TagModel", b =>
@@ -128,7 +129,7 @@ namespace Catalog.Api.DatabaseContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", "catalog");
                 });
 
             modelBuilder.Entity("ProductModelTagModel", b =>
@@ -143,7 +144,7 @@ namespace Catalog.Api.DatabaseContext.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("ProductTags", (string)null);
+                    b.ToTable("ProductTags", "catalog");
                 });
 
             modelBuilder.Entity("Catalog.Api.DatabaseContext.Models.ProductModel", b =>

@@ -11,8 +11,12 @@ namespace Identity.Api.DatabaseContext.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "identity");
+
             migrationBuilder.CreateTable(
                 name: "OpenIddictApplications",
+                schema: "identity",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
@@ -39,6 +43,7 @@ namespace Identity.Api.DatabaseContext.Migrations
 
             migrationBuilder.CreateTable(
                 name: "OpenIddictScopes",
+                schema: "identity",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
@@ -58,6 +63,7 @@ namespace Identity.Api.DatabaseContext.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Users",
+                schema: "identity",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -67,7 +73,8 @@ namespace Identity.Api.DatabaseContext.Migrations
                     Updated = table.Column<Guid>(type: "uuid", nullable: true),
                     UpdatedDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     LockoutAttempts = table.Column<int>(type: "integer", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    Roles = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -76,6 +83,7 @@ namespace Identity.Api.DatabaseContext.Migrations
 
             migrationBuilder.CreateTable(
                 name: "OpenIddictAuthorizations",
+                schema: "identity",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
@@ -94,12 +102,14 @@ namespace Identity.Api.DatabaseContext.Migrations
                     table.ForeignKey(
                         name: "FK_OpenIddictAuthorizations_OpenIddictApplications_Application~",
                         column: x => x.ApplicationId,
+                        principalSchema: "identity",
                         principalTable: "OpenIddictApplications",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "OpenIddictTokens",
+                schema: "identity",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
@@ -122,44 +132,52 @@ namespace Identity.Api.DatabaseContext.Migrations
                     table.ForeignKey(
                         name: "FK_OpenIddictTokens_OpenIddictApplications_ApplicationId",
                         column: x => x.ApplicationId,
+                        principalSchema: "identity",
                         principalTable: "OpenIddictApplications",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_OpenIddictTokens_OpenIddictAuthorizations_AuthorizationId",
                         column: x => x.AuthorizationId,
+                        principalSchema: "identity",
                         principalTable: "OpenIddictAuthorizations",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
+                schema: "identity",
                 table: "OpenIddictApplications",
                 column: "ClientId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictAuthorizations_ApplicationId_Status_Subject_Type",
+                schema: "identity",
                 table: "OpenIddictAuthorizations",
                 columns: new[] { "ApplicationId", "Status", "Subject", "Type" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictScopes_Name",
+                schema: "identity",
                 table: "OpenIddictScopes",
                 column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictTokens_ApplicationId_Status_Subject_Type",
+                schema: "identity",
                 table: "OpenIddictTokens",
                 columns: new[] { "ApplicationId", "Status", "Subject", "Type" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictTokens_AuthorizationId",
+                schema: "identity",
                 table: "OpenIddictTokens",
                 column: "AuthorizationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictTokens_ReferenceId",
+                schema: "identity",
                 table: "OpenIddictTokens",
                 column: "ReferenceId",
                 unique: true);
@@ -169,19 +187,24 @@ namespace Identity.Api.DatabaseContext.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OpenIddictScopes");
+                name: "OpenIddictScopes",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "OpenIddictTokens");
+                name: "OpenIddictTokens",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Users",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "OpenIddictAuthorizations");
+                name: "OpenIddictAuthorizations",
+                schema: "identity");
 
             migrationBuilder.DropTable(
-                name: "OpenIddictApplications");
+                name: "OpenIddictApplications",
+                schema: "identity");
         }
     }
 }

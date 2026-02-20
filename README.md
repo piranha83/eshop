@@ -13,13 +13,21 @@ This catalog project was generated with [dotnet core].
 
 Run `dotnet run` for a dev server. Navigate to  `curl -X POST https://localhost:7255/oauth/token -H "accept: application/json" -H "Content-Type: application/x-www-form-urlencoded" -k -d "grant_type=[grand type]&client_id=[client]&&username=[user]&password=[user password]&scope=catalog-api"`.
 
+### Production
+
+Navigate to `https://identity-lp2f.onrender.com`
+
 # Catalog api service
 
 This catalog project was generated with [dotnet core].
 
 ### Development
 
-Run `dotnet run` for a dev server. Navigate to  `https://localhost:7259/swagger` or `http://localhost:3000/products`.
+Run `dotnet run` for a dev server. Navigate to  `https://localhost:7259/swagger` or `http://localhost:3000/product`.
+
+### Production
+
+Navigate to `https://catalog-r711.onrender.com/product`
 
 ### Add migrations
 
@@ -28,7 +36,7 @@ Run `dotnet ef database update --context ApplicationDbContext --connection "[Con
 
 # Eshop client
 
-This frontend project was generated with [Angular CLI](https://github.com/angular/angular-cli).
+This frontend project was generated with [Angular CLI](https://github.com/angular/angular-cli). Navigate to `https://frontend-0jjc.onrender.com`
 
 ### Install
 
@@ -40,7 +48,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 
 ### Production
 
-Run `ng serve --configuration production` for a prod server. Navigate to `http://localhost:4200/`.
+Run `ng serve --configuration production` for a prod server. Navigate to `http://localhost:4200/`. Navigate to `https://frontend-0jjc.onrender.com`
 
 ### Deploy on github
 

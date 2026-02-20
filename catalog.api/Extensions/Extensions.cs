@@ -24,7 +24,8 @@ internal static class Extensions
 
     internal static void AddClientFlow(
         this IServiceCollection serviceCollection,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        bool acceptAnyServerCertificateValidator)
     {
         ArgumentNullException.ThrowIfNull(serviceCollection);
 
@@ -33,10 +34,15 @@ internal static class Extensions
         {
             options.SetIssuer(configuration.GetIdentityApiUrl());
             options.AddAudiences(configuration.GetCatalogApiUrl());
-            //options.AddEncryptionCertificate(typeof(Program).Assembly, "Catalog.Api.server-encryption-certificate.pfx", null);
+            options.AddEncryptionCertificate(configuration);
             // Register the System.Net.Http integration.
-            options.UseSystemNetHttp().ConfigureHttpClientHandler(handler => handler
-                .ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator);//todo
+            options.UseSystemNetHttp().ConfigureHttpClientHandler(handler =>
+            {
+                if (acceptAnyServerCertificateValidator)
+                {
+                    handler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;//todo
+                }
+            });
             // Register the ASP.NET Core host.
             options.UseAspNetCore();
         });
@@ -60,5 +66,20 @@ internal static class Extensions
     internal static IApplicationBuilder UseClientFlow(this IApplicationBuilder app)
     {
         return app.UseAuthentication().UseAuthorization();
+    }
+
+
+    internal static OpenIddictValidationBuilder AddEncryptionCertificate(this OpenIddictValidationBuilder serverBuilder, IConfiguration configuration)
+    {
+        if (configuration.IsRender()) /*for tests*/
+        {
+        }
+        else
+        {
+            using var stream = new FileStream(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "certificates", "server-encryption-certificate.pfx"), FileMode.Open);
+            serverBuilder.AddEncryptionCertificate(stream, null);
+        }
+
+        return serverBuilder;
     }
 }

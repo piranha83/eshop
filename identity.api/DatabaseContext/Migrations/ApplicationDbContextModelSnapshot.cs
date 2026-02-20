@@ -17,7 +17,8 @@ namespace Identity.Api.DatabaseContext.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasDefaultSchema("identity")
+                .HasAnnotation("ProductVersion", "9.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -57,7 +58,7 @@ namespace Identity.Api.DatabaseContext.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", "identity");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreApplication", b =>
@@ -122,7 +123,7 @@ namespace Identity.Api.DatabaseContext.Migrations
                     b.HasIndex("ClientId")
                         .IsUnique();
 
-                    b.ToTable("OpenIddictApplications", (string)null);
+                    b.ToTable("OpenIddictApplications", "identity");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreAuthorization", b =>
@@ -164,7 +165,7 @@ namespace Identity.Api.DatabaseContext.Migrations
 
                     b.HasIndex("ApplicationId", "Status", "Subject", "Type");
 
-                    b.ToTable("OpenIddictAuthorizations", (string)null);
+                    b.ToTable("OpenIddictAuthorizations", "identity");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreScope", b =>
@@ -205,7 +206,7 @@ namespace Identity.Api.DatabaseContext.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("OpenIddictScopes", (string)null);
+                    b.ToTable("OpenIddictScopes", "identity");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreToken", b =>
@@ -265,7 +266,7 @@ namespace Identity.Api.DatabaseContext.Migrations
 
                     b.HasIndex("ApplicationId", "Status", "Subject", "Type");
 
-                    b.ToTable("OpenIddictTokens", (string)null);
+                    b.ToTable("OpenIddictTokens", "identity");
                 });
 
             modelBuilder.Entity("OpenIddict.EntityFrameworkCore.Models.OpenIddictEntityFrameworkCoreAuthorization", b =>

@@ -22,7 +22,7 @@ import { SharedModule } from './shared/shared.module';
 import { OrderModule } from './features/order/order.module';
 import { ContactsComponent } from './pages/contacts/contacts.component';
 import { environment } from 'src/environments/environment';
-import Data from '../../../moq/products.json';
+import Data from 'products.json';
 
 registerLocaleData(localeRu, 'ru-RU', localeRuExtra);
 
@@ -52,11 +52,11 @@ registerLocaleData(localeRu, 'ru-RU', localeRuExtra);
       useFactory: function (http: HttpClient) {
         switch(environment.production)
         {
-          case false:
+          case true:
             let ds = new HttpDataService(http);
             return ds;
 
-          case true:
+          case false:
             let hds = new DataService();
             hds.setData(Data.products);
             return hds;
