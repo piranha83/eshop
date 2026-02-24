@@ -23,14 +23,18 @@ internal partial class IdentityJob(
 
             await InitDb(stoppingToken);
 
-            while (!stoppingToken.IsCancellationRequested)
+            using PeriodicTimer timer = new PeriodicTimer(TimeSpan.FromHours(24));
+            while (await timer.WaitForNextTickAsync(stoppingToken))
             {
                 await Cleanup(stoppingToken);
-                await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
                 logger.LogInformation($"Ожидание...");
             }
 
             logger.LogInformation($"Задача завершена.");
+        }
+        catch(OperationCanceledException)
+        {
+            logger.LogInformation($"Задача отменена.");
         }
         catch (Exception ex)
         {
