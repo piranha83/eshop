@@ -1,12 +1,17 @@
 using System.Reflection;
 using FluentValidation;
 using Infrastructure.Core.Features.Entity;
+using Infrastructure.Core.Features.HealthCheck;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Npgsql;
 
 namespace Infrastructure.Core.Extensions;
@@ -82,5 +87,25 @@ public static class ServiceCollectionExtensions
     public static IApplicationBuilder UseCorsPolicy(this IApplicationBuilder app)
     {
         return app.UseCors("Policy");
+    }
+
+    public static IHealthChecksBuilder AddHealthCheck(this IServiceCollection serviceCollection)
+    {
+        ArgumentNullException.ThrowIfNull(serviceCollection);
+        return serviceCollection.AddHealthChecks()
+            .AddTypeActivatedCheck<NpgSqlHealthCheck>(nameof(NpgSqlHealthCheck), failureStatus: HealthStatus.Degraded);
+    }
+
+    public static IEndpointConventionBuilder MapHealthCheck(this IEndpointRouteBuilder app)
+    {
+        return app.MapHealthChecks("/health-check", new HealthCheckOptions
+        {
+            ResultStatusCodes =
+            {
+                [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                [HealthStatus.Degraded] = StatusCodes.Status503ServiceUnavailable,
+                [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable,
+            },
+        });
     }
 }
