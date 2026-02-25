@@ -3,7 +3,7 @@ using Infrastructure.Core.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthCheck();
 builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddFlowServer(builder.Configuration);
 builder.Services.AddHttpLogging();
@@ -12,7 +12,7 @@ builder.ConfigureWeb();
 
 var app = builder.Build();
 
-app.MapHealthChecks("/");
+app.MapHealthCheck();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
