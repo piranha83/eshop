@@ -8,7 +8,7 @@ using Infrastructure.Core.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthCheck();
 builder.Services.AddClientFlow(builder.Configuration,
     builder.Environment.IsDevelopment() && builder.Configuration.IsRender());
 builder.Services.AddCrudServices();
@@ -33,7 +33,7 @@ app.MapGroup("Product")
     .MapDelete<ApplicationDbContext, ProductModel, long>();
 
 app.UseImgFiles(builder.Environment.ContentRootPath);
-app.MapHealthChecks("/");
+app.MapHealthCheck();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger().UseSwaggerUI();
