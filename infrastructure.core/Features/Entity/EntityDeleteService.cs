@@ -1,11 +1,13 @@
 using Infrastructure.Core.Abstractions;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Core.Features.Entity;
 
 ///<inheritdoc/>
 internal class EntityDeleteService<TContext, TEntity, TKey>(
-    TContext context) : IEntityDeleteService<TContext, TEntity, TKey>
+    TContext context,
+    IOutputCacheStore cacheStore) : IEntityDeleteService<TContext, TEntity, TKey>
     where TContext : DbContext
     where TEntity : class, IEntity<TKey>
     where TKey : struct
@@ -28,6 +30,7 @@ internal class EntityDeleteService<TContext, TEntity, TKey>(
                 }
 
                 await transaction.CommitAsync(ct);
+                await cacheStore.EvictByTagAsync(Consts.Cache.FilterPolicy, ct);
             }
             catch
             {

@@ -20,6 +20,7 @@ builder.Services.AddCorsPolicy(builder.Configuration);
 builder.Services.AddHttpLogging();
 builder.Services.AddEndpointsApiExplorer().AddSwagger();
 builder.Services.AddDefaultContext();
+builder.Services.AddCache(builder.Configuration);
 //
 builder.Services.AddContext<ApplicationDbContext>(builder.Configuration);
 builder.Services.AddMapper(typeof(Program).Assembly);
@@ -47,6 +48,7 @@ else if (app.Environment.IsProduction())
     app.UseHttpsRedirection();
 }
 
+app.UseOutputCache();
 app.UseWeb();
 app.UseCorsPolicy();
 app.UseClientFlow();

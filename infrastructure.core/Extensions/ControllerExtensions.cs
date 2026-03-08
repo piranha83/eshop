@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Core.Extensions;
 
@@ -33,6 +34,7 @@ public static class ControllerExtensions
                 .Produces(StatusCodes.Status500InternalServerError)
                 .ProducesValidation()
                 .AllowAnonymous()
+                .CacheOutput(Consts.Cache.FilterPolicy)
                 .WithDescription("Извлечение и просмотр списка существующих данных");
         return routeGroupBuilder;
     }
@@ -54,6 +56,7 @@ public static class ControllerExtensions
                 .Produces(StatusCodes.Status500InternalServerError)
                 .ProducesValidation()
                 .AllowAnonymous()
+                .CacheOutput(Consts.Cache.FilterPolicy)
                 .WithDescription("Извлечение и просмотр существующих данных");
         return routeGroupBuilder;
     }

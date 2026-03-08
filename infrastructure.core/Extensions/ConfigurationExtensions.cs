@@ -19,6 +19,11 @@ public static class ConfigurationExtensions
     public static bool IsRender(this IConfiguration configuration) =>
         !string.IsNullOrEmpty(configuration["render"]);
 
+    public static TimeSpan GetMinutes(this IConfiguration configuration, string key, TimeSpan @default) =>
+        int.TryParse(configuration[key], out int value)
+        ? TimeSpan.FromMinutes(value)
+        : @default;
+
     private static string GetString(this IConfiguration configuration, string key)
     {
         ArgumentException.ThrowIfNullOrEmpty(key);
