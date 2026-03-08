@@ -1,0 +1,16 @@
+<form class="w500" #f="ngForm" (ngSubmit)="onSubmit(f)" [ngFormOptions]="{updateOn: 'blur'}" passwordmatch>
+    <h1>Регистрация</h1>
+    <label for="name">Фамилия Имя:</label>
+    <input type="text" name="name" required pattern="^[a-zA-Zа-яА-ЯёЁ]+\s[a-zA-Zа-яА-Я\sёЁ]+$" ngModel>
+    <div [hidden]="valid(f, 'name')" class="alert">Невалидное имя</div>
+    <label for="email">Email:</label>
+    <input type="email" name="email" required email ngModel>
+    <div [hidden]="valid(f, 'email')" class="alert">Невалидное почта</div>
+    <label for="password">Пароль:</label>
+    <input type="password" name="password" password ngModel><br/>
+    <div [hidden]="valid(f, 'password')" class="alert">Невалидный пароль</div>
+    <label for="confirm">Повторить пароль:</label>
+    <input type="password" name="confirm" required ngModel>
+    <div [hidden]="valid(f, 'confirm')" class="alert">Пароль должен совпадать</div>
+    <button class="button warning" [disabled]="f.invalid" type="submit">Зарегистрироваться</button>
+</form>

@@ -1,0 +1,26 @@
+<form [formGroup]="schema.form" (ngSubmit)="onSubmit()">
+    <ng-container *ngFor="let c of render(schema.form)">
+        <ng-container [ngSwitch]="c.type">
+            <ng-container *ngSwitchCase="'label'">
+                <h2>{{c.label}}</h2>
+            </ng-container>
+            <ng-container *ngSwitchCase="'radio'">
+                <label for="{{c.name}}">{{c.label}}:</label>
+                <input *ngIf="!c.parent" type="radio" name="{{c.name}}" [value]="c.control.value"/>
+                <ng-container *ngIf="c.parent">
+                    <input type="radio" name="{{c.parent}}" [value]="c.control.value"/>
+                </ng-container>
+                <br/>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+                <label for="{{c.name}}">{{c.label}}:</label>
+                <input *ngIf="!c.parent" type="text" name="{{c.name}}" [value]="c.control.value" />
+                <ng-container *ngIf="c.parent">
+                    <input type="text" name="{{c.name}}" [value]="c.control.value"/>
+                </ng-container>
+                <div [hidden]="!invalid(c.control)" class="alert">Формат {{c.label}} невалиден</div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+    <button class="button warning" [disabled]="schema.form.invalid" type="submit">Сохранить</button>
+</form>

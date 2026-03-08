@@ -1,0 +1,17 @@
+version: "1"
+services:
+  - type: web
+    name: frontend
+    runtime: docker
+    repo: https://github.com/piranha83/eshop
+    branch: render
+    plan: free
+    region: oregon
+    dockerContext: ./eshop
+    dockerfilePath: ./eshop/Dockerfile
+    autoDeployTrigger: off
+
+databases:
+  - name: postgres
+    plan: free
+    postgresMajorVersion: 16
