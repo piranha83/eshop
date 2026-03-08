@@ -18,7 +18,7 @@ public static class DbExtensions
 
     public static IQueryable<TEntity> Search<TEntity, TKey>(this IQueryable<TEntity> data, SearchCriteria searchCriteria)
     where TEntity : class, IEntity<TKey>
-    where TKey: struct
+    where TKey : struct
     {
         data = data.AsNoTracking();
         if (searchCriteria.Include != null)
@@ -89,7 +89,7 @@ public static class DbExtensions
         ? data.OrderByDescending(x => EF.Property<dynamic>(x!, propertyName))
         : data.OrderBy(x => EF.Property<dynamic>(x!, propertyName));
 
-    public static void Tracker(this ChangeTracker changeTracker, IIdentity? identity = null)
+    public static void Tracker(this ChangeTracker changeTracker, Guid? userId = null)
     {
         ArgumentNullException.ThrowIfNull(changeTracker, nameof(changeTracker));
 
@@ -98,10 +98,7 @@ public static class DbExtensions
             e.State == EntityState.Modified))
         {
             entityEntry.Entity.UpdatedDate = DateTimeOffset.UtcNow;
-            if (identity?.IsAuthenticated == true && Guid.TryParse(identity?.Name, out Guid editedUserId))
-            {
-                entityEntry.Entity.Updated = editedUserId;
-            }
+            entityEntry.Entity.Updated = userId;
         }
     }
 
@@ -115,4 +112,9 @@ public static class DbExtensions
         "_gte" => data.Where(x => EF.Functions.GreaterThanOrEqual(ValueTuple.Create(EF.Property<TValue>(x!, propertyName)), ValueTuple.Create(value))),
         _ => data.Where(x => EF.Property<TValue>(x!, propertyName)!.Equals(value)),
     };
+
+    public static IQueryable<T> ForUpdate<T>(this IQueryable<T> data) where T : class
+    {
+        return data.TagWith(Consts.ForUpdateTag);
+    }
 }

@@ -32,6 +32,7 @@ public static class ControllerExtensions
                 .Produces(StatusCodes.Status404NotFound)
                 .Produces(StatusCodes.Status500InternalServerError)
                 .ProducesValidation()
+                .AllowAnonymous()
                 .WithDescription("Извлечение и просмотр списка существующих данных");
         return routeGroupBuilder;
     }
@@ -52,6 +53,7 @@ public static class ControllerExtensions
                 .Produces(StatusCodes.Status404NotFound)
                 .Produces(StatusCodes.Status500InternalServerError)
                 .ProducesValidation()
+                .AllowAnonymous()
                 .WithDescription("Извлечение и просмотр существующих данных");
         return routeGroupBuilder;
     }

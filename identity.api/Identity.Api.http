@@ -1,0 +1,6 @@
+@Identity.Api_HostAddress = https://localhost:7255
+
+GET {{Identity.Api_HostAddress}}/
+Accept: application/json
+
+###
