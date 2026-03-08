@@ -1,7 +1,6 @@
-namespace Catalog.Api.DatabaseContext;
+namespace Identity.Api.DatabaseContext;
 
-using System.Reflection;
-using Catalog.Api.DatabaseContext.Models;
+using Identity.Api.DatabaseContext.Models;
 using Infrastructure.Core.Extensions;
 using Infrastructure.Core.Features.Context;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +8,10 @@ using Microsoft.EntityFrameworkCore;
 ///<inheritdoc/>
 internal class ApplicationDbContext : DbContext
 {
-    public DbSet<CatalogModel> Catalogs { get; set; }
-
-    public DbSet<ProductModel> Products { get; set; }
-
-    public DbSet<TagModel> Tags { get; set; }
+    /// <summary>
+    /// Пользователи.
+    /// </summary>
+    public DbSet<UserEntity> Users { get; set; }
 
     /// <summary>
     /// Редактируемый пользователь.
@@ -36,8 +34,7 @@ internal class ApplicationDbContext : DbContext
     ///<inheritdoc/>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("catalog");
+        modelBuilder.HasDefaultSchema("identity");
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

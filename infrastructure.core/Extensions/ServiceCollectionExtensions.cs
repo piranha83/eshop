@@ -3,6 +3,7 @@ using FluentValidation;
 using Infrastructure.Core.Features.Context;
 using Infrastructure.Core.Features.Entity;
 using Infrastructure.Core.Features.HealthCheck;
+using Infrastructure.Core.Interceptors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +30,9 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(configuration, nameof(configuration));
 
         return serviceCollection
-            .AddDbContext<TContext>(options => options.UseNpgsql(configuration.GetConnectionString("Default")));
+            .AddDbContext<TContext>(options => options
+                .UseNpgsql(configuration.GetConnectionString("Default"))
+                .AddInterceptors(new SelectForUpdateInterceptor()));
     }
 
     public static async Task EnsureCreated<TContext>(this IServiceScope scope)

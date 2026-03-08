@@ -29,7 +29,8 @@ public sealed class SelectForUpdateInterceptor : DbCommandInterceptor
 
     private static void ModifyCommand(DbCommand command)
     {
-        if (command.CommandText.Contains(Consts.ForUpdateTag))
+        if (command.CommandText.Contains(Consts.ForUpdateTag) &&
+            command.CommandText.Trim().StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
         {
             command.CommandText += " FOR UPDATE";
         }
