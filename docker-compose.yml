@@ -1,0 +1,14 @@
+services:
+  frontend:
+    build:
+     context: ./eshop
+     dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    restart: always
+    networks:
+      - net
+
+networks:
+  net:
+    name: angular-network
