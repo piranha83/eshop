@@ -129,4 +129,18 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddHttpContextAccessor();
         return serviceCollection;
     }
+
+    public static IServiceCollection AddCache(this IServiceCollection serviceCollection, IConfiguration configuration)
+    {
+        ArgumentNullException.ThrowIfNull(serviceCollection);
+
+        return serviceCollection.AddOutputCache(options =>
+        {
+            options.AddPolicy(Consts.Cache.FilterPolicy, builder => builder
+                .Tag(Consts.Cache.FilterPolicy)
+                .Expire(configuration.GetMinutes("CatalogApi:CacheMinutes", TimeSpan.FromMinutes(5))));
+            options.AddPolicy(Consts.Cache.NoCache, builder => builder
+                .NoCache());
+        });
+    }
 }

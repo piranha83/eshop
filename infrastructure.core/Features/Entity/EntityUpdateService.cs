@@ -2,6 +2,7 @@ using AutoMapper;
 using FluentValidation;
 using Infrastructure.Core.Abstractions;
 using Infrastructure.Core.Extensions;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Core.Features.Entity;
@@ -10,7 +11,8 @@ namespace Infrastructure.Core.Features.Entity;
 internal class EntityUpdateService<TContext, TEntity, TKey, TEntityRequest>(
     TContext context,
     IMapper mapper,
-    IValidator<TEntityRequest> validator)
+    IValidator<TEntityRequest> validator,
+    IOutputCacheStore cacheStore)
     : IEntityUpdateService<TContext, TEntity, TKey, TEntityRequest>
     where TContext : DbContext
     where TEntity : class, IEntity<TKey>
@@ -30,6 +32,7 @@ internal class EntityUpdateService<TContext, TEntity, TKey, TEntityRequest>(
                 await context.AddAsync(entity, ct);
                 await context.SaveChangesAsync(ct);
                 await transaction.CommitAsync(ct);
+                await cacheStore.EvictByTagAsync(Consts.Cache.FilterPolicy, ct);
             }
             catch
             {
@@ -57,6 +60,7 @@ internal class EntityUpdateService<TContext, TEntity, TKey, TEntityRequest>(
                     mapper.Map(model, entity);
                     context.Update(entity);
                     await context.SaveChangesAsync(ct);
+                    await cacheStore.EvictByTagAsync(Consts.Cache.FilterPolicy, ct);
                     removed = true;
                 }
 

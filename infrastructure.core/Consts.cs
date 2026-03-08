@@ -30,4 +30,10 @@ public static class Consts
     }
 
     public static readonly string ForUpdateTag = "IS_FOR_UPDATE";
+
+    public static class Cache
+    {
+        public static readonly string FilterPolicy = "filter-policy";
+        public static readonly string NoCache = "no-cache";
+    } 
 }
