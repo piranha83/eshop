@@ -28,8 +28,9 @@ public class ProductDeleteTests : IAsyncLifetime
     public async Task Should_Delete_Test()
     {
         // Arrange
+        var chache = new Mock<IOutputCacheStore>();
         var service = new EntityDeleteService<ApplicationDbContext, ProductModel, long>(
-            _context!);
+            _context!, chache.Object);
 
         // Act
         var success = await service.Delete(1, CancellationToken.None);
