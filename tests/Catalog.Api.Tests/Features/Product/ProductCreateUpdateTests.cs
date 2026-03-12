@@ -32,6 +32,7 @@ public class ProductCreateUpdateTests : IAsyncLifetime
         // Arrange
         var mapper = MapTests.Default().CreateMapper();
         var validator = new ProductCreateRequestValidator();
+        var cacheStore = new Mock<IOutputCacheStore>();
         var request = new ProductCreateRequest
         {
             CatalogId = 1,
@@ -42,7 +43,7 @@ public class ProductCreateUpdateTests : IAsyncLifetime
         };
 
         var service = new EntityUpdateService<ApplicationDbContext, ProductModel, long, ProductCreateRequest>(
-            _context!, mapper, validator);
+            _context!, mapper, validator, cacheStore.Object);
 
         // Act
         var id = await service.Add(request, CancellationToken.None);
@@ -66,6 +67,7 @@ public class ProductCreateUpdateTests : IAsyncLifetime
         // Arrange
         var mapper = MapTests.Default().CreateMapper();
         var validator = new ProductUpdateRequestValidator();
+        var cacheStore = new Mock<IOutputCacheStore>();
         var request = new ProductUpdateRequest
         {
             CatalogId = 1,
@@ -79,7 +81,7 @@ public class ProductCreateUpdateTests : IAsyncLifetime
         };
 
         var service = new EntityUpdateService<ApplicationDbContext, ProductModel, long, ProductUpdateRequest>(
-            _context!, mapper, validator);
+            _context!, mapper, validator, cacheStore.Object);
 
         // Act
         var success = await service.Update(1, request, CancellationToken.None);
