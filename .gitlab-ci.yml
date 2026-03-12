@@ -10,6 +10,8 @@ build:       # This job runs in the build stage, which runs first.
     - npm install -g @angular/cli
     - npm install
     - ng build --prod
+    - dotnet restore
+    - dotnet build --no-restore --configuration Release
     - echo "BUILD SUCCESSFUL"
   artifacts:
     paths:
@@ -18,13 +20,14 @@ build:       # This job runs in the build stage, which runs first.
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 60
-    - echo "Code coverage is 90%"
+    - dotnet test --no-build --configuration Release --filter Category!=Integration
 
-lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
+publish:
+  stage: publish
+  only:
+    - main
   script:
-    - echo "Linting code... This will take about 10 seconds."
-    - sleep 10
-    - echo "No lint issues found."
+    - dotnet publish -c Release -o ./publish
+  artifacts:
+    paths:
+      - ./publish/
