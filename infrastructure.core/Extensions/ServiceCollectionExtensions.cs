@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.OpenApi;
 using Npgsql;
 
 namespace Infrastructure.Core.Extensions;
@@ -141,6 +142,31 @@ public static class ServiceCollectionExtensions
                 .Expire(configuration.GetMinutes("CatalogApi:CacheMinutes", TimeSpan.FromMinutes(5))));
             options.AddPolicy(Consts.Cache.NoCache, builder => builder
                 .NoCache());
+        });
+    }
+
+    public static void AddSwagger(this IServiceCollection serviceCollection)
+    {
+        ArgumentNullException.ThrowIfNull(serviceCollection);
+
+        serviceCollection.AddSwaggerGen(option =>
+        {
+            option.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+            option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+            
+            option.AddSecurityRequirement(document =>
+            {
+                var requirement = new OpenApiSecurityRequirement();
+                requirement.Add(new OpenApiSecuritySchemeReference("Bearer", document), []);
+                return requirement;
+            });
         });
     }
 }
