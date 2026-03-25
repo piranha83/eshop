@@ -8,25 +8,25 @@ public interface PaymentProcessEvent
     /// <summary>
     /// Уникальный идентификатор заказа.
     /// </summary>
-    Guid OrderId { get; set; }
+    Guid OrderId { get; }
 
     /// <summary>
     /// Уникальный идентификатор клиента.
     /// </summary>
-    Guid ClientId { get; set; }
+    Guid ClientId { get; }
 
     /// <summary>
     /// Итог.
     /// </summary>
-    decimal Amount { get; set; }
+    decimal Amount { get; }
 
     /// <summary>
     /// Тип валюты.
     /// </summary>
-    CurrencyType Currency { get; set; }
+    CurrencyType CurrencyType { get; }
 
     /// <summary>
     /// Тип оплаты.
     /// </summary>
-    PaymentType Type { get; set; }
+    PaymentType PaymentType { get; }
 }

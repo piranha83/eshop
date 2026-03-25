@@ -1,9 +1,9 @@
 namespace Contract.Api.Payment;
 
 /// <summary>
-/// Команда: оплата не прошла, вернуть деньги.
+/// Событие: статус возврата.
 /// </summary>
-public interface PaymentRefundEvent
+public interface PaymentRefundedStatusEvent
 {
     /// <summary>
     /// Уникальный идентификатор заказа.

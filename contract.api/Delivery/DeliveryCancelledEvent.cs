@@ -9,9 +9,4 @@ public interface DeliveryCancelledEvent
     /// Уникальный идентификатор заказа.
     /// </summary>
     Guid OrderId { get; }
-
-    /// <summary>
-    /// Причина.
-    /// </summary>
-    string Message { get; }
 }

@@ -13,6 +13,6 @@ public class OrderSubmittedEventValidator : AbstractValidator<OrderSubmittedEven
         RuleFor(x => x.Type).IsInEnum();
         RuleFor(x => x.Address).NotNull().NotEmpty();
         RuleFor(x => x.CartItems).NotNull().NotEmpty();
-        RuleFor(x => x.Amount).GreaterThan(0);
+        RuleFor(x => x.Amount).GreaterThan(0).Must(amount => (amount % 1.00m) <= 0.99m);
     }
 }
