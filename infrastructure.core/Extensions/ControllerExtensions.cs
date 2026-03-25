@@ -132,7 +132,7 @@ public static class ControllerExtensions
         return routeGroupBuilder;
     }
 
-    private static RouteHandlerBuilder ProducesValidation(this RouteHandlerBuilder routeGroupBuilder)
+    public static RouteHandlerBuilder ProducesValidation(this RouteHandlerBuilder routeGroupBuilder)
     {
         return routeGroupBuilder
             .Produces(StatusCodes.Status400BadRequest)

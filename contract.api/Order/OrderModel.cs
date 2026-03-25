@@ -5,47 +5,47 @@ using Contract.Api.Payment;
 namespace Contract.Api.Order;
 
 /// <summary>
-/// Событие: Заказ создан.
+/// Создать заказ.
 /// </summary>
-public interface OrderSubmittedEvent
+public record OrderModel : OrderSubmittedEvent
 {
     /// <summary>
     /// Уникальный идентификатор заказа.
     /// </summary>
-    Guid OrderId { get; }
+    public Guid OrderId { get; init; }
 
     /// <summary>
     /// Уникальный идентификатор клиента.
     /// </summary>
-    Guid ClientId { get; }
+    public Guid ClientId { get; init; }
 
     /// <summary>
     /// Тип доставки.
     /// </summary>
-    DeliveryType Type { get; }
+    public DeliveryType Type { get; set; }
 
     /// <summary>
     /// Адресс доставки.
     /// </summary>
-    string Address { get; }
+    public string Address { get; set; } = default!;
 
     /// <summary>
     /// Покупки.
     /// </summary>
-    IReadOnlyCollection<CartItemModel> CartItems { get; }
+    public IReadOnlyCollection<CartItemModel> CartItems { get; set; } = default!;
 
     /// <summary>
     /// Итого.
     /// </summary>
-    decimal Amount { get; }
+    public decimal Amount { get; set; }
 
     /// <summary>
     /// Тип валюты.
     /// </summary>
-    CurrencyType CurrencyType { get; }
+    public CurrencyType CurrencyType { get; set; }
 
     /// <summary>
     /// Тип оплаты.
     /// </summary>
-    PaymentType PaymentType { get; }
+    public PaymentType PaymentType { get; set; }
 }

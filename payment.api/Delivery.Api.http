@@ -1,0 +1,6 @@
+@payment.api_HostAddress = https://localhost:7296
+
+GET {{payment.api_HostAddress}}
+Accept: application/json
+
+###

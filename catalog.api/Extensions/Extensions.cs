@@ -2,7 +2,6 @@ using Infrastructure.Core;
 using Infrastructure.Core.Extensions;
 using Infrastructure.Core.Features.Security;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.OpenApi;
 using OpenIddict.Validation.AspNetCore;
 using static OpenIddict.Abstractions.OpenIddictConstants;
 
@@ -49,31 +48,6 @@ internal static class Extensions
             options.AddPolicy(Consts.Policy.Viewer, x => x
                 .RequireRole(Claims.Role, nameof(Consts.ClaimsRoles.Viewer))
                 .AuthenticationSchemes.Add(OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme));
-        });
-    }
-
-    internal static void AddSwagger(this IServiceCollection serviceCollection)
-    {
-        ArgumentNullException.ThrowIfNull(serviceCollection);
-
-        serviceCollection.AddSwaggerGen(option =>
-        {
-            option.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
-            option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                In = ParameterLocation.Header,
-                Name = "Authorization",
-                Type = SecuritySchemeType.Http,
-                BearerFormat = "JWT",
-                Scheme = "Bearer"
-            });
-            
-            option.AddSecurityRequirement(document =>
-            {
-                var requirement = new OpenApiSecurityRequirement();
-                requirement.Add(new OpenApiSecuritySchemeReference("Bearer", document), []);
-                return requirement;
-            });
         });
     }
 

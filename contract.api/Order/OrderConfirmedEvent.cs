@@ -1,4 +1,4 @@
-namespace Contract.Api.Delivery;
+namespace Contract.Api.Order;
 
 /// <summary>
 /// Команда: заказ потвержден успешно.

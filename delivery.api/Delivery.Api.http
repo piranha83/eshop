@@ -1,0 +1,6 @@
+@delivery.api_HostAddress = https://localhost:7266
+
+GET {{delivery.api_HostAddress}}
+Accept: application/json
+
+###

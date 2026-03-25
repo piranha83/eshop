@@ -9,7 +9,6 @@ public class DeliveryProcessEventValidator : AbstractValidator<DeliveryProcessEv
     public DeliveryProcessEventValidator()
     {
         RuleFor(x => x.Address).NotNull().NotEmpty();
-        RuleFor(x => x.ClientId).NotEmpty();
         RuleFor(x => x.OrderId).NotEmpty();
         RuleFor(x => x.Type).IsInEnum();
     }

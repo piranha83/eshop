@@ -1,3 +1,5 @@
+using Contract.Api.Cart;
+
 namespace Contract.Api.Delivery;
 
 /// <summary>
@@ -8,20 +10,20 @@ public interface DeliveryProcessEvent
     /// <summary>
     /// Уникальный идентификатор заказа.
     /// </summary>
-    Guid OrderId { get; set; }
-
-    /// <summary>
-    /// Уникальный идентификатор клиента.
-    /// </summary>
-    Guid ClientId { get; set; }
+    Guid OrderId { get; }
 
     /// <summary>
     /// Тип доставки.
     /// </summary>
-    DeliveryType Type { get; set; }
+    DeliveryType Type { get; }
 
     /// <summary>
     /// Адресс доставки.
     /// </summary>
-    string Address { get; set; }
+    string Address { get; }
+
+    /// <summary>
+    /// Покупки.
+    /// </summary>
+    IReadOnlyCollection<CartItemModel> CartItems { get; }
 }
