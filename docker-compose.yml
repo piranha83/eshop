@@ -68,6 +68,28 @@ services:
     networks:
       - net
 
+  payment:
+    build:
+      context: .
+      dockerfile: ./payment.api/Dockerfile
+      args:
+        configuration: "Debug"
+    ports:
+      - "5192:80"
+      - "7296:443"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_URLS: https://+;http://+
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Password: password
+    restart: always
+    volumes:
+      - ${HOME}/.aspnet/dev-certs/trust:/https/
+    depends_on:
+      - postgres
+    networks:
+      - net
+
   frontend:
     build:
      context: ./eshop
