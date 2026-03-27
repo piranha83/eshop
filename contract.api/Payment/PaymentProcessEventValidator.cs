@@ -9,6 +9,9 @@ public class PaymentProcessEventValidator : AbstractValidator<PaymentProcessEven
     public PaymentProcessEventValidator()
     {
         RuleFor(x => x.OrderId).NotEmpty();
-        RuleFor(x => x.Amount).GreaterThan(0);
+        RuleFor(x => x.ClientId).NotEmpty();
+        RuleFor(x => x.CurrencyType).IsInEnum();
+        RuleFor(x => x.PaymentType).IsInEnum();
+        RuleFor(x => x.Amount).GreaterThan(0).Must(amount => (amount % 1.00m) <= 0.99m);
     }
 }

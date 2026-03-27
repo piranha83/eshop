@@ -1,8 +1,8 @@
 using Contract.Api.Payment;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Payment.Api.DatabaseContext;
 using Payment.Api.DatabaseContext.Models;
-using Payment.Api.Extensions;
 using Payment.Api.Features.PaymentStatus;
 
 namespace Payment.Api.Features.PaymentRefund;
@@ -19,7 +19,9 @@ internal class PaymentRefundEventConsumer(
     {
         logger.LogInformation($"- Начать возврат {context.Message.OrderId} оплаты по сбп...");
 
-        if (await dbContext.Payments.FindByOrderId(context.Message.OrderId, context.CancellationToken) is PaymentModel refundPayment
+        if (await dbContext.Payments
+            .Filter(context.Message.OrderId, PaymentStatusType.Accepted)
+            .FirstOrDefaultAsync(context.CancellationToken) is PaymentModel refundPayment
             && refundPayment.Status == PaymentStatusType.Accepted)
         {
             if (await bankService.RefundPayment(new RefundRequest

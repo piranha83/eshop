@@ -3,8 +3,8 @@ using Infrastructure.Core.Extensions;
 using Payment.Api.DatabaseContext.Models;
 using Contract.Api.Payment;
 using Payment.Api.DatabaseContext;
-using Payment.Api.Extensions;
 using Payment.Api.Features.PaymentStatus;
+using Microsoft.EntityFrameworkCore;
 
 namespace Payment.Api.Features.PaymentStatusSet;
 
@@ -24,7 +24,9 @@ internal class PaymentStatusSetEventConsumer(
         {
             // оплата по сбп завершена успешно
             case PaymentStatusType.Accepted:
-                if (await dbContext.Payments.ForUpdate().FindByOrderId(context.Message.OrderId, context.CancellationToken) is PaymentModel acceptedPayment
+                if (await dbContext.Payments.ForUpdate()
+                    .Filter(context.Message.OrderId, PaymentStatusType.InProgress)
+                    .FirstOrDefaultAsync(context.CancellationToken) is PaymentModel acceptedPayment
                 && acceptedPayment.Status == PaymentStatusType.InProgress)
                 {
                     acceptedPayment.Status = PaymentStatusType.Accepted;
@@ -43,7 +45,9 @@ internal class PaymentStatusSetEventConsumer(
             // оплата по сбп отклонена, не оплачена
             case PaymentStatusType.Rejected:
             case PaymentStatusType.NotStarted:
-                if (await dbContext.Payments.ForUpdate().FindByOrderId(context.Message.OrderId, context.CancellationToken) is PaymentModel rejectedPayment
+                if (await dbContext.Payments.ForUpdate()
+                    .Filter(context.Message.OrderId, PaymentStatusType.InProgress)
+                    .FirstOrDefaultAsync(context.CancellationToken) is PaymentModel rejectedPayment
                 && rejectedPayment.Status != PaymentStatusType.Accepted)
                 {
                     rejectedPayment.Status = PaymentStatusType.Rejected;

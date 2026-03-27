@@ -19,7 +19,8 @@ internal class PaymentStatusEventConsumer(
     {
         logger.LogInformation($"- Оплата по сбп {context.Message.OrderId} проверка статуса...");
 
-        var qrCodeId = await dbContext.Payments.Where(x => x.OrderId == context.Message.OrderId)
+        var qrCodeId = await dbContext.Payments
+            .Filter(context.Message.OrderId, PaymentStatusType.InProgress)
             .Select(x => x.QrCodeId)
             .FirstOrDefaultAsync(context.CancellationToken);
 
@@ -29,11 +30,9 @@ internal class PaymentStatusEventConsumer(
             {
                 // оплата по сбп завершена успешно
                 case PaymentStatusType.Accepted:
-                    if (await dbContext.Payments.ForUpdate().FirstOrDefaultAsync(x =>
-                        x.OrderId == context.Message.OrderId &&
-                        x.Status == PaymentStatusType.InProgress &&
-                        x.Type == PaymentType.SBP,
-                        context.CancellationToken) is PaymentModel acceptedPayment)
+                    if (await dbContext.Payments.ForUpdate()
+                        .Filter(context.Message.OrderId, PaymentStatusType.InProgress)
+                        .FirstOrDefaultAsync(context.CancellationToken) is PaymentModel acceptedPayment)
                     {
                         acceptedPayment.Status = PaymentStatusType.Accepted;
                         dbContext.Update(acceptedPayment);
@@ -52,15 +51,13 @@ internal class PaymentStatusEventConsumer(
 
                 // возврат
                 case PaymentStatusType.RefundInProgress:
-                break;
+                    break;
 
                 // оплата по сбп отклонена, не оплачена
                 default:
-                    if (await dbContext.Payments.ForUpdate().FirstOrDefaultAsync(x =>
-                        x.OrderId == context.Message.OrderId &&
-                        x.Status == PaymentStatusType.InProgress &&
-                        x.Type == PaymentType.SBP,
-                        context.CancellationToken) is PaymentModel rejectedPayment)
+                    if (await dbContext.Payments.ForUpdate()
+                        .Filter(context.Message.OrderId, PaymentStatusType.InProgress)
+                        .FirstOrDefaultAsync(context.CancellationToken) is PaymentModel rejectedPayment)
                     {
                         rejectedPayment.Status = PaymentStatusType.Rejected;
                         dbContext.Update(rejectedPayment);
