@@ -9,6 +9,7 @@ using Payment.Api.Features;
 using Microsoft.Extensions.Options;
 using Payment.Api.Features.PaymentStatus;
 using Payment.Api.Features.PaymentRefund;
+using Infrastructure.Core;
 
 namespace Payment.Api.Extensions;
 
@@ -21,7 +22,11 @@ public static class PaymentExtensions
             this IServiceCollection serviceCollection,
             IConfiguration configuration)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(configuration.GetConnectionString("Rabbit"));
+        var options = configuration.GetSection("Rabbit").Get<RabbitOptions>();
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(options.Host);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(options.User);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(options.Password);
 
         serviceCollection.AddHostedService<InitJob>();
         serviceCollection.AddContext<ApplicationDbContext>(configuration);
@@ -42,7 +47,15 @@ public static class PaymentExtensions
 
             cfg.UsingRabbitMq((context, config) =>
             {
-                config.Host(configuration.GetConnectionString("Rabbit"));
+                config.Host(options.Host, options.Vhost, h =>
+                {
+                    h.Username(options.User);
+                    h.Password(options.Password);
+                    if (options.UseSsl)
+                    {
+                        h.UseSsl();
+                    }
+                });
                 config.ConfigureEndpoints(context);
             });
         });
