@@ -1,8 +1,10 @@
+using System.Text.Json.Serialization;
 using Contract.Api.Cart;
 using Contract.Api.Delivery;
+using Contract.Api.Order;
 using Contract.Api.Payment;
 
-namespace Contract.Api.Order;
+namespace Order.Api.Features.Order;
 
 /// <summary>
 /// Создать заказ.
@@ -12,11 +14,13 @@ public record OrderModel : OrderSubmittedEvent
     /// <summary>
     /// Уникальный идентификатор заказа.
     /// </summary>
+    [JsonIgnore]
     public Guid OrderId { get; init; }
 
     /// <summary>
     /// Уникальный идентификатор клиента.
     /// </summary>
+    [JsonIgnore]
     public Guid ClientId { get; init; }
 
     /// <summary>

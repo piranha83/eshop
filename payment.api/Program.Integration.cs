@@ -2,3 +2,4 @@
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Payment.Api.Tests")]
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")] 

@@ -1,0 +1,2877 @@
+openapi: 3.0.3
+info:
+  title: OpenAPI
+  description: Коллекция запросов для работы с OpenAPI Точки
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: '{{RS_URL}}'
+  - url: '{{AS_URL}}'
+paths:
+  /v1.0/consents:
+    get:
+      tags:
+        - Разрешения
+      summary: Проверка всех разрешений
+      description: Проверка всех разрешений
+      operationId: ''
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      summary: 'Второй шаг: создание разрешения'
+      description: >-
+        С полученным токеном идем создавать разрешения.
+
+        Из ответа берем id разреешения и заворачиваем это все в объект jwt.
+
+        В данной коллекции полностью подготовленный запрос выдается в консоль
+        для того что бы сразу можно было перейти и подтвердить разрешения
+      operationId: '38'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    expirationDateTime:
+                      type: string
+                      example: '2030-10-03T00:00:00+00:00'
+                    permissions:
+                      type: array
+                      items:
+                        type: string
+                        example: ReadAccountsBasic
+                      example:
+                        - ReadAccountsBasic
+                        - ReadAccountsDetail
+                        - ReadBalances
+                        - ReadStatements
+                        - ReadCustomerData
+                        - ReadSBPData
+                        - EditSBPData
+                        - CreatePaymentForSign
+                        - CreatePaymentOrder
+                        - ReadAcquiringData
+                        - MakeAcquiringOperation
+                        - ManageWebhookData
+                        - ManageInvoiceData
+            examples:
+              'Второй шаг: создание разрешения':
+                value:
+                  Data:
+                    expirationDateTime: '2030-10-03T00:00:00+00:00'
+                    permissions:
+                      - ReadAccountsBasic
+                      - ReadAccountsDetail
+                      - ReadBalances
+                      - ReadStatements
+                      - ReadCustomerData
+                      - ReadSBPData
+                      - EditSBPData
+                      - CreatePaymentForSign
+                      - CreatePaymentOrder
+                      - ReadAcquiringData
+                      - MakeAcquiringOperation
+                      - ManageWebhookData
+                      - ManageInvoiceData
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /v1.0/consents/{consent_id}:
+    get:
+      tags:
+        - Разрешения
+      summary: Проверяем разрешение
+      description: Запрос для проверки статуса разрешения
+      operationId: '1'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: consent_id
+        in: path
+        required: true
+        schema:
+          type: string
+  /v1.0/consents/{consent_id}/child:
+    get:
+      tags:
+        - Разрешения
+      summary: Проверяем дочерние разрешения
+      description: Запрос для проверки статуса разрешения
+      operationId: '2'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: consent_id
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/register-sbp-legal-entity:
+    post:
+      tags:
+        - СБП
+        - '1. Сервис СБП: Работа с ЮЛ'
+      summary: Register Legal Entity
+      description: Register Legal Entity
+      operationId: registerLegalEntity
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    bankCode:
+                      type: string
+                      example: '{{bankCode}}'
+                    customerCode:
+                      type: string
+                      example: '{{customerCode}}'
+            examples:
+              Register Legal Entity:
+                value:
+                  Data:
+                    bankCode: '{{bankCode}}'
+                    customerCode: '{{customerCode}}'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /sbp/v1.0/legal-entity/{legalId}:
+    get:
+      tags:
+        - СБП
+        - '1. Сервис СБП: Работа с ЮЛ'
+      summary: Get Legal Entity
+      description: Get Legal Entity
+      operationId: getLegalEntity
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - СБП
+        - '1. Сервис СБП: Работа с ЮЛ'
+      summary: Set legal entity status
+      description: Set legal entity status
+      operationId: setLegalEntityStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    legalId:
+                      type: string
+                      example: '{{legalId}}'
+                    status:
+                      type: string
+                      example: Active
+            examples:
+              Set legal entity status:
+                value:
+                  Data:
+                    legalId: '{{legalId}}'
+                    status: Active
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: legalId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/customer/{customerCode}/{bankCode}:
+    get:
+      tags:
+        - СБП
+        - '1. Сервис СБП: Работа с ЮЛ'
+      summary: Get Customer Info
+      description: Возвращает информацию о расчетном счете юр. лица.
+      operationId: getCustomerInfo
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: customerCode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: bankCode
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/account/{legalId}:
+    get:
+      tags:
+        - СБП
+        - '1. Сервис СБП: Работа с ЮЛ'
+      summary: Get Accounts List
+      description: Возвращает список счетов юр. лица.
+      operationId: getAccountsList
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: legalId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/merchant/legal-entity/{legalId}:
+    get:
+      tags:
+        - СБП
+        - '2. Сервис СБП: Работа с ТСП'
+      summary: Get Merchants List
+      description: Get Merchants List
+      operationId: getMerchantsList
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - СБП
+        - '2. Сервис СБП: Работа с ТСП'
+      summary: Register Merchant
+      description: Register Merchant
+      operationId: registerMerchant
+      parameters:
+        - name: ''
+          in: header
+          schema:
+            type: string
+            example: ''
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    address:
+                      type: string
+                      example: Адрес торговой точки
+                    brandName:
+                      type: string
+                      example: Название торговой точки
+                    capabilities:
+                      type: string
+                      example: '111'
+                    city:
+                      type: string
+                      example: Город где находится торговая точка
+                    contactPhoneNumber:
+                      type: string
+                      example: Контактный номер телефона
+                    countryCode:
+                      type: string
+                      example: RU
+                    countrySubDivisionCode:
+                      type: string
+                      example: Первые две цифры ОКТМО
+                    customerCode:
+                      type: string
+                      example: '{{customerCode}}'
+                    legalId:
+                      type: string
+                      example: '{{legalId}}'
+                    mcc:
+                      type: string
+                      example: МСС-код
+                    zipCode:
+                      type: string
+                      example: Индекс
+            examples:
+              Register Merchant:
+                value:
+                  Data:
+                    address: Адрес торговой точки
+                    brandName: Название торговой точки
+                    capabilities: '111'
+                    city: Город где находится торговая точка
+                    contactPhoneNumber: Контактный номер телефона
+                    countryCode: RU
+                    countrySubDivisionCode: Первые две цифры ОКТМО
+                    customerCode: '{{customerCode}}'
+                    legalId: '{{legalId}}'
+                    mcc: МСС-код
+                    zipCode: Индекс
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: legalId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/merchant/{merchantId}:
+    get:
+      tags:
+        - СБП
+        - '2. Сервис СБП: Работа с ТСП'
+      summary: Get Merchant
+      description: Get Merchant
+      operationId: getMerchant
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    put:
+      tags:
+        - СБП
+        - '2. Сервис СБП: Работа с ТСП'
+      summary: Set Merchant Status
+      description: Set Merchant Status
+      operationId: setMerchantStatus
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    legalId:
+                      type: string
+                      example: '{{legalId}}'
+                    status:
+                      type: string
+                      example: Active
+            examples:
+              Set Merchant Status:
+                value:
+                  Data:
+                    legalId: '{{legalId}}'
+                    status: Active
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: merchantId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/qr-code/merchant/{merchantId}/{accountId}:
+    post:
+      tags:
+        - СБП
+        - '3. Сервис СБП: Работа с QR-кодами'
+      summary: Register Qr Code
+      description: Register Qr Code
+      operationId: registerQrCode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    amount:
+                      type: number
+                      example: 1
+                    currency:
+                      type: string
+                      example: RUB
+                    customerCode:
+                      type: string
+                      example: '{{customerCode}}'
+                    imageParams:
+                      type: object
+                      properties:
+                        height:
+                          type: number
+                          example: 200
+                        mediaType:
+                          type: string
+                          example: image/png
+                        width:
+                          type: number
+                          example: 200
+                    legalId:
+                      type: string
+                      example: '{{legalId}}'
+                    merchantId:
+                      type: string
+                      example: '{{merchantId}}'
+                    paymentPurpose:
+                      type: string
+                      example: Bill
+                    qrcType:
+                      type: string
+                      example: '01'
+                    sourceName:
+                      type: string
+                      example: string
+                    redirectUrl:
+                      type: string
+                      example: string
+                    ttl:
+                      type: number
+                      example: 1
+            examples:
+              Register Qr Code:
+                value:
+                  Data:
+                    amount: 1
+                    currency: RUB
+                    customerCode: '{{customerCode}}'
+                    imageParams:
+                      height: 200
+                      mediaType: image/png
+                      width: 200
+                    legalId: '{{legalId}}'
+                    merchantId: '{{merchantId}}'
+                    paymentPurpose: Bill
+                    qrcType: '01'
+                    sourceName: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Data:
+                    type: object
+                    properties:
+                      qrcId:
+                        type: string
+                        nullable: false
+                      payload:
+                        type: string
+                        nullable: false
+                    additionalProperties: false
+                additionalProperties: false
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: merchantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/qr-code/{qrcId}:
+    get:
+      tags:
+        - СБП
+        - '3. Сервис СБП: Работа с QR-кодами'
+      summary: Get Qr Code
+      description: Get Qr Code
+      operationId: getQrCode
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: qrcId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/qr-codes/{qrcId}/payment-status:
+    get:
+      tags:
+        - СБП
+        - '3. Сервис СБП: Работа с QR-кодами'
+      summary: Get Qr Code Payment Status
+      description: Get Qr Code Payment Status
+      operationId: getQrCodePaymentStatus
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Data:
+                    type: object
+                    properties:
+                      paymentList:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            qrcId:
+                              type: string
+                            status:
+                              type: string
+                    additionalProperties: false
+                additionalProperties: false
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: qrcId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/qr-code/legal-entity/{legalId}:
+    get:
+      tags:
+        - СБП
+        - '3. Сервис СБП: Работа с QR-кодами'
+      summary: Get Qr Codes List
+      description: Get Qr Codes List
+      operationId: getQrCodesList
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: legalId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/refund:
+    post:
+      tags:
+        - СБП
+        - '4. Сервис СБП: Работа с возвратами'
+      summary: Start Refund
+      description: Start Refund
+      operationId: startRefund
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    accountCode:
+                      type: string
+                      example: '00000000000000000000'
+                    amount:
+                      type: number
+                      example: 0.01
+                    bankCode:
+                      type: string
+                      example: '000000000'
+                    currency:
+                      type: string
+                      example: RUB
+                    purpose:
+                      type: string
+                      example: Возврат невыясненных ндс
+                    qrcId:
+                      type: string
+                      example: '{{qrcId}}'
+                    refTransactionId:
+                      type: string
+                      example: trx-id-uuid
+                    trxId:
+                      type: string
+                      example: trx-id
+            examples:
+              Start Refund:
+                value:
+                  Data:
+                    accountCode: '00000000000000000000'
+                    amount: 0.01
+                    bankCode: '000000000'
+                    currency: RUB
+                    purpose: Возврат невыясненных ндс
+                    qrcId: '{{qrcId}}'
+                    refTransactionId: trx-id-uuid
+                    trxId: trx-id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  requestId:
+                    type: string
+                    nullable: false
+                  status:
+                    type: string
+                    nullable: false
+                additionalProperties: false
+      security:
+        - bearerAuth: []
+  /sbp/v1.0/refund/{refund_id}:
+    get:
+      tags:
+        - СБП
+        - '4. Сервис СБП: Работа с возвратами'
+      summary: Refund Status
+      description: Refund Status
+      operationId: refundStatus
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: refund_id
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/get-sbp-payments:
+    get:
+      tags:
+        - СБП
+        - '4. Сервис СБП: Работа с возвратами'
+      summary: Get payments
+      description: Get payments
+      operationId: getPayments
+      parameters:
+        - name: customerCode
+          in: query
+          schema:
+            type: string
+            example: '{{customerCode}}'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /sbp/v1.0/cashbox-qr-code:
+    post:
+      tags:
+        - СБП
+        - '5. Сервис СБП: Работа с кассовыми QR-кодами'
+      summary: Register Cashbox Qrcode
+      description: Register Cashbox Qrcode
+      operationId: registerCashboxQrcode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    accountId:
+                      type: string
+                      example: '{{accountId}}'
+                    imageParams:
+                      type: object
+                      properties:
+                        height:
+                          type: number
+                          example: 200
+                        mediaType:
+                          type: string
+                          example: image/png
+                        width:
+                          type: number
+                          example: 200
+                    merchantId:
+                      type: string
+                      example: '{{merchantId}}'
+                    redirectUrl:
+                      type: string
+                      example: ''
+            examples:
+              Register Cashbox Qrcode:
+                value:
+                  Data:
+                    accountId: '{{accountId}}'
+                    imageParams:
+                      height: 200
+                      mediaType: image/png
+                      width: 200
+                    merchantId: '{{merchantId}}'
+                    redirectUrl: ''
+      responses:
+        '200':
+          description: ''
+  /sbp/v1.0/cashbox-qr-code/{qrcId}:
+    post:
+      tags:
+        - СБП
+        - '5. Сервис СБП: Работа с кассовыми QR-кодами'
+      summary: Get Cashbox Qrcode
+      description: Get Cashbox Qrcode
+      operationId: getCashboxQrcode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    imageParams:
+                      type: object
+                      properties:
+                        height:
+                          type: number
+                          example: 200
+                        mediaType:
+                          type: string
+                          example: image/png
+                        width:
+                          type: number
+                          example: 200
+            examples:
+              Get Cashbox Qrcode:
+                value:
+                  Data:
+                    imageParams:
+                      height: 200
+                      mediaType: image/png
+                      width: 200
+      responses:
+        '200':
+          description: ''
+    parameters:
+      - name: qrcId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/cashbox-qr-code/merchant/{merchantId}/{accountId}:
+    get:
+      tags:
+        - СБП
+        - '5. Сервис СБП: Работа с кассовыми QR-кодами'
+      summary: Get Cashbox Qrcode List
+      description: Get Cashbox Qrcode List
+      operationId: getCashboxQrcodeList
+      responses:
+        '200':
+          description: ''
+    parameters:
+      - name: merchantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/cashbox-qr-code/{qrcId}/account:
+    post:
+      tags:
+        - СБП
+        - '5. Сервис СБП: Работа с кассовыми QR-кодами'
+      summary: Change Cashbox Qrcode Account
+      description: Change Cashbox Qrcode Account
+      operationId: changeCashboxQrcodeAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    accountId:
+                      type: string
+                      example: '{{accountId}}'
+            examples:
+              Change Cashbox Qrcode Account:
+                value:
+                  Data:
+                    accountId: '{{accountId}}'
+      responses:
+        '200':
+          description: ''
+    parameters:
+      - name: qrcId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/cashbox-qr-code/{qrcId}/activate:
+    post:
+      tags:
+        - СБП
+        - '5. Сервис СБП: Работа с кассовыми QR-кодами'
+      summary: Activate Cashbox Qrcode
+      description: Activate Cashbox Qrcode
+      operationId: activateCashboxQrcode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    amount:
+                      type: number
+                      example: 10000
+                    currency:
+                      type: string
+                      example: RUB
+                    paymentPurpose:
+                      type: string
+                      example: ''
+                    ttl:
+                      type: number
+                      example: 5
+            examples:
+              Activate Cashbox Qrcode:
+                value:
+                  Data:
+                    amount: 10000
+                    currency: RUB
+                    paymentPurpose: ''
+                    ttl: 5
+      responses:
+        '200':
+          description: ''
+    parameters:
+      - name: qrcId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/cashbox-qr-code/{qrcId}/deactivate:
+    post:
+      tags:
+        - СБП
+        - '5. Сервис СБП: Работа с кассовыми QR-кодами'
+      summary: Deactivate Cashbox Qrcode
+      description: Deactivate Cashbox Qrcode
+      operationId: deactivateCashboxQrcode
+      responses:
+        '200':
+          description: ''
+    parameters:
+      - name: qrcId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/cashbox-qr-code/{qrcId}/operation:
+    get:
+      tags:
+        - СБП
+        - '5. Сервис СБП: Работа с кассовыми QR-кодами'
+      summary: Get Cashbox Qrcode Operation Status
+      description: Get Cashbox Qrcode Operation Status
+      operationId: getCashboxQrcodeOperationStatus
+      parameters:
+        - name: paramsId
+          in: query
+          schema:
+            type: string
+            example: AP10001G1HPSOI658DP9SJK41V7JEDRS
+      responses:
+        '200':
+          description: ''
+    parameters:
+      - name: qrcId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/cashbox-qr-code/{qrcId}/status:
+    get:
+      tags:
+        - СБП
+        - '5. Сервис СБП: Работа с кассовыми QR-кодами'
+      summary: Get Cashbox Qrcode Status
+      description: Get Cashbox Qrcode Status
+      operationId: getCashboxQrcodeStatus
+      responses:
+        '200':
+          description: ''
+    parameters:
+      - name: qrcId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/b2b-qr-code/merchant/{merchantId}/{accountId}:
+    post:
+      tags:
+        - СБП
+        - '6. Сервис СБП: работа с B2B QR-кодами'
+      summary: Register B2B Qrcode
+      description: Register B2B Qrcode
+      operationId: registerB2bQrcode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    amount:
+                      type: number
+                      example: 100
+                    paymentPurpose:
+                      type: string
+                      example: Bill
+                    redirectUrl:
+                      type: string
+                      example: ''
+                    sourceName:
+                      type: string
+                      example: string
+                    takeTax:
+                      type: boolean
+                      example: true
+                    totalTaxAmount:
+                      type: number
+                      example: 10
+                    ttl:
+                      type: number
+                      example: 100
+                    uip:
+                      type: string
+                      example: ''
+            examples:
+              Register B2B Qrcode:
+                value:
+                  Data:
+                    amount: 100
+                    paymentPurpose: Bill
+                    redirectUrl: ''
+                    sourceName: string
+                    takeTax: true
+                    totalTaxAmount: 10
+                    ttl: 100
+                    uip: ''
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: merchantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+  /sbp/v1.0/b2b-qr-code/{qrcId}:
+    get:
+      tags:
+        - СБП
+        - '6. Сервис СБП: работа с B2B QR-кодами'
+      summary: Get B2B Qrcode
+      description: Get B2B Qrcode
+      operationId: getB2bQrcode
+      parameters:
+        - name: width
+          in: query
+          schema:
+            type: string
+            example: '{{width}}'
+        - name: height
+          in: query
+          schema:
+            type: string
+            example: '{{height}}'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: qrcId
+        in: path
+        required: true
+        schema:
+          type: string
+  /open-banking/v1.0/statements:
+    get:
+      tags:
+        - Выписки
+      summary: Получение выписок
+      description: Получение выписок
+      operationId: 'statements'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Выписки
+      summary: Создание выписки
+      description: Создание выписки
+      operationId: 'createStatement'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    Statement:
+                      type: object
+                      properties:
+                        accountId:
+                          type: string
+                          example: '{{accountId}}'
+                        endDateTime:
+                          type: string
+                          example: '2020-10-12'
+                        startDateTime:
+                          type: string
+                          example: '2020-08-01'
+            examples:
+              Создание выписки:
+                value:
+                  Data:
+                    Statement:
+                      accountId: '{{accountId}}'
+                      endDateTime: '2020-10-12'
+                      startDateTime: '2020-08-01'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /open-banking/v1.0/accounts/{accountId}/statements/{statementId}:
+    get:
+      tags:
+        - Выписки
+      summary: Конкретная выписка
+      description: Конкретная выписка
+      operationId: 'statement'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: statementId
+        in: path
+        required: true
+        schema:
+          type: string
+  /payment/v1.0/for-sign:
+    get:
+      tags:
+        - Платежи
+      summary: Список платежей на подпись
+      description: Список платежей на подпись
+      operationId: 'paymentForSign'
+      parameters:
+        - name: customerCode
+          in: query
+          schema:
+            type: string
+            example: '{{customerCode}}'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Платежи
+      summary: Создание платежа на подпись
+      description: Создание платежа на подпись
+      operationId: 'createPaymentForSign'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    accountCode:
+                      type: string
+                      example: '00000000000000000000'
+                    bankCode:
+                      type: string
+                      example: '000000000'
+                    counterpartyAccountNumber:
+                      type: string
+                      example: '03100643000000010500'
+                    counterpartyBankBic:
+                      type: string
+                      example: '018580010'
+                    counterpartyBankCorrAccount:
+                      type: string
+                      example: '40102810245370000072'
+                    counterpartyINN:
+                      type: string
+                      example: '0000000000'
+                    counterpartyKPP:
+                      type: string
+                      example: '000000000'
+                    counterpartyName:
+                      type: string
+                      example: >-
+                        УФК по Респ. Башкортостан (Управление капитального
+                        строительства Администрации ГО г. Уфа РБ)
+                    paymentAmount:
+                      type: number
+                      example: 1
+                    paymentDate:
+                      type: string
+                      example: '2020-12-29'
+                    paymentNumber:
+                      type: string
+                      example: '12'
+                    paymentPriority:
+                      type: string
+                      example: '5'
+                    paymentPurpose:
+                      type: string
+                      example: налог на прибыль
+                    supplierBillId:
+                      type: string
+                      example: '0'
+                    taxInfoDocumentDate:
+                      type: string
+                      example: '2019-10-11'
+                    taxInfoDocumentNumber:
+                      type: string
+                      example: '12'
+                    taxInfoKBK:
+                      type: string
+                      example: '00000000000000000000'
+                    taxInfoOKATO:
+                      type: string
+                      example: '00000000'
+                    taxInfoPeriod:
+                      type: string
+                      example: МС.08.2009
+                    taxInfoReasonCode:
+                      type: string
+                      example: ТП
+                    taxInfoStatus:
+                      type: string
+                      example: '08'
+            examples:
+              Создание платежа на подпись:
+                value:
+                  Data:
+                    accountCode: '00000000000000000000'
+                    bankCode: '044525104'
+                    counterpartyAccountNumber: '00000000000000000000'
+                    counterpartyBankBic: '044525104'
+                    counterpartyINN: '000000000000'
+                    counterpartyName: Индивидуальный предприниматель
+                    paymentAmount: '1300'
+                    paymentDate: '2020-12-28'
+                    paymentNumber: '1'
+                    paymentPriority: '5'
+                    paymentPurpose: без ндс
+                    supplierBillId: '0'
+              Создание платежа на подпись в налоговую:
+                value:
+                  Data:
+                    accountCode: '00000000000000000000'
+                    bankCode: '000000000'
+                    counterpartyAccountNumber: '03100643000000010500'
+                    counterpartyBankBic: '018580010'
+                    counterpartyBankCorrAccount: '40102810245370000072'
+                    counterpartyINN: '0000000000'
+                    counterpartyKPP: '000000000'
+                    counterpartyName: >-
+                      УФК по Респ. Башкортостан (Управление капитального
+                      строительства Администрации ГО г. Уфа РБ)
+                    paymentAmount: 1
+                    paymentDate: '2020-12-29'
+                    paymentNumber: '12'
+                    paymentPriority: '5'
+                    paymentPurpose: налог на прибыль
+                    supplierBillId: '0'
+                    taxInfoDocumentDate: '2019-10-11'
+                    taxInfoDocumentNumber: '12'
+                    taxInfoKBK: '00000000000000000000'
+                    taxInfoOKATO: '00000000'
+                    taxInfoPeriod: МС.08.2009
+                    taxInfoReasonCode: ТП
+                    taxInfoStatus: '08'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /payment/v1.0/status/{requestId}:
+    get:
+      tags:
+        - Платежи
+      summary: Статус платежа
+      description: Статус платежа
+      operationId: 'paymentStatus'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: requestId
+        in: path
+        required: true
+        schema:
+          type: string
+  /webhook/v1.0/{client_id}:
+    get:
+      tags:
+        - Вебхуки
+      summary: Получение вебхука
+      description: Получение вебхука
+      operationId: 'webhook'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    put:
+      tags:
+        - Вебхуки
+      summary: Создание вебхука
+      description: Создание вебхука
+      operationId: 'createWebhook'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  example: https://test.com
+                webhooksList:
+                  type: array
+                  items:
+                    type: string
+                    example: incomingPayment
+                  example:
+                    - incomingPayment
+            examples:
+              Создание вебхука:
+                value:
+                  url: https://test.com
+                  webhooksList:
+                    - incomingPayment
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Data:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        example: https://test.com
+                      webhooksList:
+                        type: array
+                        items:
+                          type: string
+                          example: incomingPayment
+                        example:
+                          - incomingPayment
+                    additionalProperties: false
+                additionalProperties: false
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Вебхуки
+      summary: Редактирование вебхука
+      description: Редактирование вебхука
+      operationId: 'updateWebhook'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  example: https://test.com
+                webhooksList:
+                  type: array
+                  items:
+                    type: string
+                    example: incomingPayment
+                  example:
+                    - incomingPayment
+            examples:
+              Редактирование вебхука:
+                value:
+                  url: https://test.com
+                  webhooksList:
+                    - incomingPayment
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    delete:
+      tags:
+        - Вебхуки
+      summary: Удаление вебхука
+      description: Удаление вебхука
+      operationId: 'deleteWebhook'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+                  example: '{{webhook_url}}'
+                webhooksList:
+                  type: array
+                  items:
+                    type: string
+                    example: incomingPayment
+                  example:
+                    - incomingPayment
+            examples:
+              Удаление вебхука:
+                value:
+                  url: '{{webhook_url}}'
+                  webhooksList:
+                    - incomingPayment
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: client_id
+        in: path
+        required: true
+        schema:
+          type: string
+  /webhook/v1.0/{client_id}/test_send:
+    post:
+      tags:
+        - Вебхуки
+      summary: Запрос для отправки тестового вебхука Copy
+      description: Запрос для отправки тестового вебхука Copy
+      operationId: copy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                webhookType:
+                  type: string
+                  example: incomingPayment
+            examples:
+              Запрос для отправки тестового вебхука Copy:
+                value:
+                  webhookType: incomingPayment
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: client_id
+        in: path
+        required: true
+        schema:
+          type: string
+  /acquiring/v1.0/retailers:
+    get:
+      tags:
+        - Платежные ссылки
+      summary: Информация о ретейлере
+      description: Информация о ретейлере
+      operationId: '13'
+      parameters:
+        - name: customerCode
+          in: query
+          schema:
+            type: string
+            example: '{{customerCode}}'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /acquiring/v1.0/payments/{operationId}:
+    get:
+      tags:
+        - Платежные ссылки
+      summary: Информация об операции
+      description: Информация об операции
+      operationId: '14'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: operationId
+        in: path
+        required: true
+        schema:
+          type: string
+  /acquiring/v1.0/payments:
+    get:
+      tags:
+        - Платежные ссылки
+      summary: Список операций
+      description: Список операций
+      operationId: '15'
+      parameters:
+        - name: customerCode
+          in: query
+          schema:
+            type: string
+            example: '{{customerCode}}'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Платежные ссылки
+      summary: Создание ссылки на оплату
+      description: Создание ссылки на оплату
+      operationId: '16'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Создание ссылки на оплату:
+                value: |-
+                  {
+                      "Data": {
+                          "customerCode": {{customerCode}},
+                          "amount": "",
+                          "purpose": "",
+                          "paymentMode": [
+                              "sbp",
+                              "card"
+                          ],
+                          "redirectUrl": "",
+                          "preAuthorization": false,
+                          "ttl": 10080
+                      }
+                  }
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /acquiring/v1.0/payments/{operationId}/refund:
+    post:
+      tags:
+        - Платежные ссылки
+      summary: Возврат платежа
+      description: Возврат платежа
+      operationId: 'paymentRefund'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    amount:
+                      type: string
+                      example: ''
+            examples:
+              Возврат платежа:
+                value:
+                  Data:
+                    amount: ''
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: operationId
+        in: path
+        required: true
+        schema:
+          type: string
+  /acquiring/v1.0/payments/{operationId}/capture:
+    post:
+      tags:
+        - Платежные ссылки
+      summary: Метод для списания средств при двухэтапной оплате
+      description: Метод для списания средств при двухэтапной оплате
+      operationId: 'paymentsCapture'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Метод для списания средств при двухэтапной оплате:
+                value: ''
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: operationId
+        in: path
+        required: true
+        schema:
+          type: string
+  /acquiring/v1.0/payments_with_receipt:
+    post:
+      tags:
+        - Платежные ссылки
+      summary: Создание ссылки на оплату с чеком
+      description: Создание ссылки на оплату с чеком
+      operationId: 'paymentsWithReceipt'
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Создание ссылки на оплату с чеком:
+                value: |-
+                  {
+                      "Data": {
+                          "customerCode": {{customerCode}},
+                          "amount": "",
+                          "purpose": "",
+                          "redirectUrl": "",
+                          "failRedirectUrl": "",
+                          "paymentMode": [],
+                          "merchantId": "",
+                          "taxSystemCode": "",
+                          "Client": {
+                              "name": "",
+                              "email": "",
+                              "phone": ""
+                          },
+                          "Items": [
+                              {
+                                  "vatType": "",
+                                  "name": "",
+                                  "amount": "",
+                                  "quantity": 1,
+                                  "paymentMethod": "",
+                                  "paymentObject": "",
+                                  "measure": ""
+                              }
+                          ],
+                          "preAuthorization": false,
+                          "ttl": 10080
+                      }
+                  }
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /invoice/v1.0/bills:
+    post:
+      tags:
+        - Работа с выставлением счетов
+      summary: Создание счета на оплату
+      description: Создание счета на оплату
+      operationId: '20'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    Content:
+                      type: object
+                      properties:
+                        Invoice:
+                          type: object
+                          properties:
+                            Positions:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  ndsKind:
+                                    type: string
+                                    example: nds_0
+                                  positionName:
+                                    type: string
+                                    example: Название товара или услуги
+                                  price:
+                                    type: string
+                                    example: '12345.00'
+                                  quantity:
+                                    type: string
+                                    example: '12345'
+                                  totalAmount:
+                                    type: string
+                                    example: '12345'
+                                  totalNds:
+                                    type: string
+                                    example: '1'
+                                  unitCode:
+                                    type: string
+                                    example: шт.
+                              example:
+                                - ndsKind: nds_0
+                                  positionName: Название товара или услуги
+                                  price: '12345.00'
+                                  quantity: '12345'
+                                  totalAmount: '12345'
+                                  totalNds: '1'
+                                  unitCode: шт.
+                            basedOn:
+                              type: string
+                              example: Основание платежа
+                            comment:
+                              type: string
+                              example: Комментарий
+                            date:
+                              type: string
+                              example: '2021-05-06'
+                            number:
+                              type: string
+                              example: '3'
+                            paymentExpiryDate:
+                              type: string
+                              example: '2021-05-06'
+                            totalAmount:
+                              type: string
+                              example: '12345'
+                            totalNds:
+                              type: string
+                              example: '1'
+                    SecondSide:
+                      type: object
+                      properties:
+                        accountId:
+                          type: string
+                          example: 00000000000000000000/000000000
+                        bankCorrAccount:
+                          type: string
+                          example: '00000000000000000000'
+                        bankName:
+                          type: string
+                          example: ТОЧКА ПАО БАНКА "ФК ОТКРЫТИЕ"
+                        kpp:
+                          type: string
+                          example: '000000000'
+                        legalAddress:
+                          type: string
+                          example: >-
+                            197183, г. Санкт-Петербург, ул. Сестрорецкая, д. 8,
+                            литер а, помещ. 29н, офис 12
+                        secondSideName:
+                          type: string
+                          example: ООО "ГОС-АЛЬЯНС"
+                        taxCode:
+                          type: string
+                          example: '0000000000'
+                        type:
+                          type: string
+                          example: company
+                    accountId:
+                      type: string
+                      example: '{{accountId}}'
+                    customerCode:
+                      type: string
+                      example: '{{customerCode}}'
+            examples:
+              Создание счета на оплату:
+                value:
+                  Data:
+                    Content:
+                      Invoice:
+                        Positions:
+                          - ndsKind: nds_0
+                            positionName: Название товара или услуги
+                            price: '12345.00'
+                            quantity: '12345'
+                            totalAmount: '12345'
+                            totalNds: '1'
+                            unitCode: шт.
+                        basedOn: Основание платежа
+                        comment: Комментарий
+                        date: '2021-05-06'
+                        number: '3'
+                        paymentExpiryDate: '2021-05-06'
+                        totalAmount: '12345'
+                        totalNds: '1'
+                    SecondSide:
+                      accountId: 00000000000000000000/000000000
+                      bankCorrAccount: '00000000000000000000'
+                      bankName: ТОЧКА ПАО БАНКА "ФК ОТКРЫТИЕ"
+                      kpp: '000000000'
+                      legalAddress: >-
+                        197183, г. Санкт-Петербург, ул. Сестрорецкая, д. 8,
+                        литер а, помещ. 29н, офис 12
+                      secondSideName: ООО "ГОС-АЛЬЯНС"
+                      taxCode: '0000000000'
+                      type: company
+                    accountId: '{{accountId}}'
+                    customerCode: '{{customerCode}}'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /invoice/v1.0/bills/{customerCode}/{documentId}/payment-status:
+    get:
+      tags:
+        - Работа с выставлением счетов
+      summary: Получение статуса счета на оплату
+      description: Получение статуса счета на оплату
+      operationId: '21'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: customerCode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+  /invoice/v1.0/bills/{customerCode}/{documentId}/file:
+    get:
+      tags:
+        - Работа с выставлением счетов
+      summary: Получение файла выставленного счета
+      description: Получение файла выставленного счета
+      operationId: '22'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: customerCode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+  /invoice/v1.0/bills/{customerCode}/{documentId}/email:
+    post:
+      tags:
+        - Работа с выставлением счетов
+      summary: Отправка счета на оплату на почту
+      description: Отправка счета на оплату на почту
+      operationId: '23'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: user@example.com
+            examples:
+              Отправка счета на оплату на почту:
+                value:
+                  Data:
+                    email: user@example.com
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: customerCode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+  /invoice/v1.0/bills/{customerCode}/{documentId}:
+    delete:
+      tags:
+        - Работа с выставлением счетов
+      summary: Удаление счета на оплату
+      description: Удаление счета на оплату
+      operationId: '24'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: customerCode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+  /invoice/v1.0/closing-documents:
+    post:
+      tags:
+        - Работа с закрывающими документами
+      summary: Создание закрывающего документа (акт)
+      description: Создание закрывающего документа (акт)
+      operationId: '25'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    Content:
+                      type: object
+                      properties:
+                        Invoicef:
+                          type: object
+                          properties:
+                            Positions:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  ndsKind:
+                                    type: string
+                                    example: nds_0
+                                  positionName:
+                                    type: string
+                                    example: Название товара или услуги
+                                  price:
+                                    type: string
+                                    example: '12345.00'
+                                  quantity:
+                                    type: string
+                                    example: '12345'
+                                  totalAmount:
+                                    type: string
+                                    example: '12345'
+                                  totalNds:
+                                    type: string
+                                    example: '1'
+                                  unitCode:
+                                    type: string
+                                    example: шт.
+                              example:
+                                - ndsKind: nds_0
+                                  positionName: Название товара или услуги
+                                  price: '12345.00'
+                                  quantity: '12345'
+                                  totalAmount: '12345'
+                                  totalNds: '1'
+                                  unitCode: шт.
+                            basedOn:
+                              type: string
+                              example: Основание платежа
+                            comment:
+                              type: string
+                              example: Комментарий
+                            date:
+                              type: string
+                              example: '2021-05-06'
+                            number:
+                              type: string
+                              example: '3'
+                            totalAmount:
+                              type: string
+                              example: '12345'
+                            totalNds:
+                              type: string
+                              example: '1'
+                    SecondSide:
+                      type: object
+                      properties:
+                        accountId:
+                          type: string
+                          example: 00000000000000000000/000000000
+                        bankCorrAccount:
+                          type: string
+                          example: '00000000000000000000'
+                        bankName:
+                          type: string
+                          example: ТОЧКА ПАО БАНКА "ФК ОТКРЫТИЕ"
+                        kpp:
+                          type: string
+                          example: '000000000'
+                        legalAddress:
+                          type: string
+                          example: >-
+                            197183, г. Санкт-Петербург, ул. Сестрорецкая, д. 8,
+                            литер а, помещ. 29н, офис 12
+                        secondSideName:
+                          type: string
+                          example: ООО "ГОС-АЛЬЯНС"
+                        taxCode:
+                          type: string
+                          example: '0000000000'
+                        type:
+                          type: string
+                          example: company
+                    accountId:
+                      type: string
+                      example: '{{accountId}}'
+                    customerCode:
+                      type: string
+                      example: '{{customerCode}}'
+                    documentId:
+                      type: string
+                      example: 1cf95c4f-e794-4407-bac4-0829f19bd2be
+            examples:
+              Создание закрывающего документа (акт):
+                value:
+                  Data:
+                    Content:
+                      Act:
+                        Positions:
+                          - ndsKind: nds_0
+                            positionName: Название товара или услуги
+                            price: '12345.00'
+                            quantity: '12345'
+                            totalAmount: '12345'
+                            totalNds: '1'
+                            unitCode: шт.
+                        basedOn: Основание платежа
+                        comment: Комментарий
+                        date: '2021-05-06'
+                        number: '3'
+                        totalAmount: '12345'
+                        totalNds: '1'
+                    SecondSide:
+                      accountId: 00000000000000000000/000000000
+                      bankCorrAccount: '00000000000000000000'
+                      bankName: ТОЧКА ПАО БАНКА "ФК ОТКРЫТИЕ"
+                      kpp: '000000000'
+                      legalAddress: >-
+                        197183, г. Санкт-Петербург, ул. Сестрорецкая, д. 8,
+                        литер а, помещ. 29н, офис 12
+                      secondSideName: ООО "ГОС-АЛЬЯНС"
+                      taxCode: '0000000000'
+                      type: company
+                    accountId: '{{accountId}}'
+                    customerCode: '{{customerCode}}'
+                    documentId: 1cf95c4f-e794-4407-bac4-0829f19bd2be
+              Создание закрывающего документа (счет-фактура):
+                value:
+                  Data:
+                    Content:
+                      Invoicef:
+                        Positions:
+                          - ndsKind: nds_0
+                            positionName: Название товара или услуги
+                            price: '12345.00'
+                            quantity: '12345'
+                            totalAmount: '12345'
+                            totalNds: '1'
+                            unitCode: шт.
+                        basedOn: Основание платежа
+                        comment: Комментарий
+                        date: '2021-05-06'
+                        number: '3'
+                        totalAmount: '12345'
+                        totalNds: '1'
+                    SecondSide:
+                      accountId: 00000000000000000000/000000000
+                      bankCorrAccount: '00000000000000000000'
+                      bankName: ТОЧКА ПАО БАНКА "ФК ОТКРЫТИЕ"
+                      kpp: '000000000'
+                      legalAddress: >-
+                        197183, г. Санкт-Петербург, ул. Сестрорецкая, д. 8,
+                        литер а, помещ. 29н, офис 12
+                      secondSideName: ООО "ГОС-АЛЬЯНС"
+                      taxCode: '0000000000'
+                      type: company
+                    accountId: '{{accountId}}'
+                    customerCode: '{{customerCode}}'
+                    documentId: 1cf95c4f-e794-4407-bac4-0829f19bd2be
+              Создание закрывающего документа (товарная накладная):
+                value:
+                  Data:
+                    Content:
+                      PackingList:
+                        Positions:
+                          - ndsKind: nds_0
+                            positionName: Название товара или услуги
+                            price: '12345.00'
+                            quantity: '12345'
+                            totalAmount: '12345'
+                            totalNds: '1'
+                            unitCode: шт.
+                        basedOn: Основание платежа
+                        comment: Комментарий
+                        date: '2021-05-06'
+                        number: '3'
+                        totalAmount: '12345'
+                        totalNds: '1'
+                    SecondSide:
+                      accountId: 00000000000000000000/000000000
+                      bankCorrAccount: '00000000000000000000'
+                      bankName: ТОЧКА ПАО БАНКА "ФК ОТКРЫТИЕ"
+                      kpp: '000000000'
+                      legalAddress: >-
+                        197183, г. Санкт-Петербург, ул. Сестрорецкая, д. 8,
+                        литер а, помещ. 29н, офис 12
+                      secondSideName: ООО "ГОС-АЛЬЯНС"
+                      taxCode: '0000000000'
+                      type: company
+                    accountId: '{{accountId}}'
+                    customerCode: '{{customerCode}}'
+                    documentId: 1cf95c4f-e794-4407-bac4-0829f19bd2be
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /invoice/{api_version}/closing-documents:
+    post:
+      tags:
+        - Работа с закрывающими документами
+      summary: Создание закрывающего документа (УПД)
+      description: Создание закрывающего документа (УПД)
+      operationId: '26'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    Content:
+                      type: object
+                      properties:
+                        Upd:
+                          type: object
+                          properties:
+                            Positions:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  ndsKind:
+                                    type: string
+                                    example: nds_0
+                                  positionName:
+                                    type: string
+                                    example: Название товара или услуги
+                                  price:
+                                    type: string
+                                    example: '12345.00'
+                                  quantity:
+                                    type: string
+                                    example: '12345'
+                                  totalAmount:
+                                    type: string
+                                    example: '12345'
+                                  totalNds:
+                                    type: string
+                                    example: '1'
+                                  unitCode:
+                                    type: string
+                                    example: шт.
+                              example:
+                                - ndsKind: nds_0
+                                  positionName: Название товара или услуги
+                                  price: '12345.00'
+                                  quantity: '12345'
+                                  totalAmount: '12345'
+                                  totalNds: '1'
+                                  unitCode: шт.
+                            basedOn:
+                              type: string
+                              example: Основание платежа
+                            date:
+                              type: string
+                              example: '2021-05-06'
+                            function:
+                              type: string
+                              example: dop
+                            number:
+                              type: string
+                              example: '3'
+                            totalAmount:
+                              type: string
+                              example: '12345'
+                            totalNds:
+                              type: string
+                              example: '1'
+                    SecondSide:
+                      type: object
+                      properties:
+                        accountId:
+                          type: string
+                          example: 00000000000000000000/000000000
+                        bankCorrAccount:
+                          type: string
+                          example: '00000000000000000000'
+                        bankName:
+                          type: string
+                          example: ТОЧКА ПАО БАНКА "ФК ОТКРЫТИЕ"
+                        kpp:
+                          type: string
+                          example: '000000000'
+                        legalAddress:
+                          type: string
+                          example: >-
+                            197183, г. Санкт-Петербург, ул. Сестрорецкая, д. 8,
+                            литер а, помещ. 29н, офис 12
+                        secondSideName:
+                          type: string
+                          example: ООО "ГОС-АЛЬЯНС"
+                        taxCode:
+                          type: string
+                          example: '0000000000'
+                        type:
+                          type: string
+                          example: company
+                    accountId:
+                      type: string
+                      example: '{{accountId}}'
+                    customerCode:
+                      type: string
+                      example: '{{customerCode}}'
+            examples:
+              Создание закрывающего документа (УПД):
+                value:
+                  Data:
+                    Content:
+                      Upd:
+                        Positions:
+                          - ndsKind: nds_0
+                            positionName: Название товара или услуги
+                            price: '12345.00'
+                            quantity: '12345'
+                            totalAmount: '12345'
+                            totalNds: '1'
+                            unitCode: шт.
+                        basedOn: Основание платежа
+                        date: '2021-05-06'
+                        function: dop
+                        number: '3'
+                        totalAmount: '12345'
+                        totalNds: '1'
+                    SecondSide:
+                      accountId: 00000000000000000000/000000000
+                      bankCorrAccount: '00000000000000000000'
+                      bankName: ТОЧКА ПАО БАНКА "ФК ОТКРЫТИЕ"
+                      kpp: '000000000'
+                      legalAddress: >-
+                        197183, г. Санкт-Петербург, ул. Сестрорецкая, д. 8,
+                        литер а, помещ. 29н, офис 12
+                      secondSideName: ООО "ГОС-АЛЬЯНС"
+                      taxCode: '0000000000'
+                      type: company
+                    accountId: '{{accountId}}'
+                    customerCode: '{{customerCode}}'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: api_version
+        in: path
+        required: true
+        schema:
+          type: string
+  /invoice/v1.0/closing-documents/{customerCode}/{documentId}/file:
+    get:
+      tags:
+        - Работа с закрывающими документами
+      summary: Получение файла закрывающего документа
+      description: Получение файла закрывающего документа
+      operationId: '27'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: customerCode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+  /invoice/v1.0/closing-documents/{customerCode}/{documentId}/email:
+    post:
+      tags:
+        - Работа с закрывающими документами
+      summary: Отправка закрывающего документа на почту
+      description: Отправка закрывающего документа на почту
+      operationId: '28'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    email:
+                      type: string
+                      example: user@example.com
+            examples:
+              Отправка закрывающего документа на почту:
+                value:
+                  Data:
+                    email: user@example.com
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: customerCode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+  /invoice/v1.0/closing-documents/{customerCode}/{documentId}:
+    delete:
+      tags:
+        - Работа с закрывающими документами
+      summary: Удаление закрывающего документа
+      description: Удаление закрывающего документа
+      operationId: '29'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: customerCode
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+  /acquiring/v1.0/subscriptions:
+    get:
+      tags:
+        - Работа с подписками (рекуррентными платежами)
+      summary: Метод для получения всех подписок
+      description: Метод для получения всех подписок
+      operationId: '35'
+      parameters:
+        - name: customerCode
+          in: query
+          schema:
+            type: string
+            example: '{{customerCode}}'
+        - name: page
+          in: query
+          schema:
+            type: string
+            example: '1'
+        - name: perPage
+          in: query
+          schema:
+            type: string
+            example: '1000'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Работа с подписками (рекуррентными платежами)
+      summary: Метод для создания подписки по карте
+      description: Метод для создания подписки по карте
+      operationId: '30'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    Options:
+                      type: object
+                      properties:
+                        period:
+                          type: string
+                          example: Month
+                        trancheCount:
+                          type: number
+                          example: 12
+                    amount:
+                      type: string
+                      example: ''
+                    customerCode:
+                      type: string
+                      example: '{{customerCode}}'
+                    failRedirectUrl:
+                      type: string
+                      example: ''
+                    merchantId:
+                      type: string
+                      example: ''
+                    purpose:
+                      type: string
+                      example: ''
+                    recurring:
+                      type: boolean
+                      example: false
+                    redirectUrl:
+                      type: string
+                      example: ''
+            examples:
+              Метод для создания подписки по карте:
+                value:
+                  Data:
+                    Options:
+                      period: Month
+                      trancheCount: 12
+                    amount: ''
+                    customerCode: '{{customerCode}}'
+                    failRedirectUrl: ''
+                    merchantId: ''
+                    purpose: ''
+                    recurring: false
+                    redirectUrl: ''
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /acquiring/v1.0/subscriptions_with_receipt:
+    post:
+      tags:
+        - Работа с подписками (рекуррентными платежами)
+      summary: Метод для создания подписки по карте и отправки чека
+      description: Метод для создания подписки по карте и отправки чека
+      operationId: '31'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    Client:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          example: ''
+                        name:
+                          type: string
+                          example: ''
+                        phone:
+                          type: string
+                          example: ''
+                    Items:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          amount:
+                            type: string
+                            example: ''
+                          measure:
+                            type: string
+                            example: ''
+                          name:
+                            type: string
+                            example: ''
+                          paymentMethod:
+                            type: string
+                            example: ''
+                          paymentObject:
+                            type: string
+                            example: ''
+                          quantity:
+                            type: number
+                            example: 1
+                          vatType:
+                            type: string
+                            example: ''
+                      example:
+                        - amount: ''
+                          measure: ''
+                          name: ''
+                          paymentMethod: ''
+                          paymentObject: ''
+                          quantity: 1
+                          vatType: ''
+                    Options:
+                      type: object
+                      properties:
+                        period:
+                          type: string
+                          example: ''
+                        trancheCount:
+                          type: number
+                          example: 1
+                    amount:
+                      type: string
+                      example: ''
+                    customerCode:
+                      type: string
+                      example: '{{customerCode}}'
+                    failRedirectUrl:
+                      type: string
+                      example: ''
+                    merchantId:
+                      type: string
+                      example: ''
+                    purpose:
+                      type: string
+                      example: ''
+                    recurring:
+                      type: boolean
+                      example: false
+                    redirectUrl:
+                      type: string
+                      example: ''
+                    taxSystemCode:
+                      type: string
+                      example: ''
+            examples:
+              Метод для создания подписки по карте и отправки чека:
+                value:
+                  Data:
+                    Client:
+                      email: ''
+                      name: ''
+                      phone: ''
+                    Items:
+                      - amount: ''
+                        measure: ''
+                        name: ''
+                        paymentMethod: ''
+                        paymentObject: ''
+                        quantity: 1
+                        vatType: ''
+                    Options:
+                      period: ''
+                      trancheCount: 1
+                    amount: ''
+                    customerCode: '{{customerCode}}'
+                    failRedirectUrl: ''
+                    merchantId: ''
+                    purpose: ''
+                    recurring: false
+                    redirectUrl: ''
+                    taxSystemCode: ''
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /acquiring/v1.0/subscriptions/{operationId}/status:
+    get:
+      tags:
+        - Работа с подписками (рекуррентными платежами)
+      summary: Метод для получение актуального статуса подписки
+      description: Метод для получение актуального статуса подписки
+      operationId: '34'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - Работа с подписками (рекуррентными платежами)
+      summary: Метод для установки статуса подписки
+      description: Метод для установки статуса подписки
+      operationId: '32'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: Cancelled
+            examples:
+              Метод для установки статуса подписки:
+                value:
+                  Data:
+                    status: Cancelled
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: operationId
+        in: path
+        required: true
+        schema:
+          type: string
+  /acquiring/v1.0/subscriptions/{operationId}/prolong:
+    post:
+      tags:
+        - Работа с подписками (рекуррентными платежами)
+      summary: Метод для продления подписки
+      description: Метод для продления подписки
+      operationId: '33'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    trancheCount:
+                      type: number
+                      example: 1
+            examples:
+              Метод для продления подписки:
+                value:
+                  Data:
+                    trancheCount: 1
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: operationId
+        in: path
+        required: true
+        schema:
+          type: string
+  /acquiring/v1.0/subscriptions/{operationId}/charge:
+    post:
+      tags:
+        - Работа с подписками (рекуррентными платежами)
+      summary: Метод для списания средств по рекуррентной подписке
+      description: Метод для списания средств по рекуррентной подписке
+      operationId: '36'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Data:
+                  type: object
+                  properties:
+                    amount:
+                      type: number
+                      example: 100
+            examples:
+              Метод для списания средств по рекуррентной подписке:
+                value:
+                  Data:
+                    amount: 100
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: operationId
+        in: path
+        required: true
+        schema:
+          type: string
+  /connect/token:
+    post:
+      summary: 'Первый шаг: получение токена для разрешений'
+      description: Для работы с разрешениями надо сначала получить access_token
+      operationId: '37'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                  example: '{{client_id}}'
+                client_secret:
+                  type: string
+                  example: '{{client_secret}}'
+                grant_type:
+                  type: string
+                  example: refresh_token
+                refresh_token:
+                  type: string
+                  example: '{{refreshtoken_hybrid}}'
+            examples:
+              Обмен refresh на новую пару access/refresh токенов:
+                value:
+                  client_id: '{{client_id}}'
+                  client_secret: '{{client_secret}}'
+                  grant_type: refresh_token
+                  refresh_token: '{{refreshtoken_hybrid}}'
+              'Первый шаг: получение токена для разрешений':
+                value:
+                  client_id: '{{client_id}}'
+                  client_secret: '{{client_secret}}'
+                  grant_type: client_credentials
+                  scope: '{{scope}}'
+              'Финальный шаг: меняем код на полноценный токен':
+                value:
+                  client_id: '{{client_id}}'
+                  client_secret: '{{client_secret}}'
+                  code: '{{code}}'
+                  grant_type: authorization_code
+                  redirect_uri: '{{redirect_uri}}'
+                  scope: '{{scope}}'
+      responses:
+        '200':
+          description: ''
+      security:
+        - {}
+  /connect/introspect:
+    post:
+      summary: Проверка accesstoken_hybrid
+      description: Проверка accesstoken_hybrid
+      operationId: accesstokenHybrid
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                access_token:
+                  type: string
+                  example: '{{accesstoken_hybrid}}'
+            examples:
+              Проверка accesstoken_hybrid:
+                value:
+                  access_token: '{{accesstoken_hybrid}}'
+      responses:
+        '200':
+          description: ''
+      security:
+        - {}
+  /open-banking/v1.0/accounts:
+    get:
+      summary: Список счетов
+      description: Запрос для получения всех доступных счетов с учетом разрешений
+      operationId: '39'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /open-banking/v1.0/accounts/{accountId}:
+    get:
+      summary: Конкретный счет
+      description: Запрос для получения всех доступных счетов с учетом разрешений
+      operationId: '40'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+  /open-banking/v1.0/customers:
+    get:
+      summary: Список компаний
+      description: Запрос для получения всех доступных компаний клиента с учетом разрешений
+      operationId: '41'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /open-banking/v1.0/customers/{customerCode}:
+    get:
+      summary: Конкретная компания
+      description: Конкретная компания
+      operationId: '42'
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: customerCode
+        in: path
+        required: true
+        schema:
+          type: string
+  /open-banking/v1.0/balances:
+    get:
+      summary: Баланс
+      description: Баланс
+      operationId: '43'
+      parameters:
+        - name: ''
+          in: header
+          schema:
+            type: string
+            example: ''
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+  /open-banking/v1.0/accounts/{accountId}/balances:
+    get:
+      summary: Баланс конкретного счета
+      description: Баланс конкретного счета
+      operationId: '44'
+      parameters:
+        - name: ''
+          in: header
+          schema:
+            type: string
+            example: ''
+      responses:
+        '200':
+          description: ''
+      security:
+        - bearerAuth: []
+    parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+tags:
+  - name: Разрешения
+  - name: СБП
+  - name: '1. Сервис СБП: Работа с ЮЛ'
+  - name: '2. Сервис СБП: Работа с ТСП'
+  - name: '3. Сервис СБП: Работа с QR-кодами'
+  - name: '4. Сервис СБП: Работа с возвратами'
+  - name: '5. Сервис СБП: Работа с кассовыми QR-кодами'
+  - name: '6. Сервис СБП: работа с B2B QR-кодами'
+  - name: Выписки
+  - name: Платежи
+  - name: Вебхуки
+  - name: Платежные ссылки
+  - name: Работа с выставлением счетов
+  - name: Работа с закрывающими документами
+  - name: Работа с подписками (рекуррентными платежами)

@@ -2,7 +2,6 @@ namespace Order.Api.DatabaseContext;
 
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using MassTransit;
 
 ///<inheritdoc/>
 internal class ApplicationDbContext : DbContext
@@ -20,10 +19,11 @@ internal class ApplicationDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         // UseBusOutbox mode.
+        /*
         modelBuilder.AddInboxStateEntity();
         modelBuilder.AddOutboxMessageEntity();
         modelBuilder.AddOutboxStateEntity();
-
+        */
         // Config
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

@@ -36,4 +36,9 @@ public static class Consts
         public static readonly string FilterPolicy = "filter-policy";
         public static readonly string NoCache = "no-cache";
     } 
+
+    /// <summary>
+    /// Время жизни qr кода.
+    /// </summary>
+    public static readonly int QrCodesTTLInMinutes = 2; 
 }

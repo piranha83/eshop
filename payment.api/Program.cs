@@ -1,5 +1,6 @@
 using FluentValidation;
 using Infrastructure.Core.Extensions;
+using Payment.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer().AddSwagger();
 builder.Services.AddValidatorsFromAssemblies([typeof(ContractApi).Assembly, typeof(Program).Assembly]);
 builder.Services.AddMapper(typeof(Program).Assembly);
 builder.Services.AddCrudServices();
+builder.Services.AddPaymenProcess(builder.Configuration);
 builder.ConfigureWeb();
 
 var app = builder.Build();
