@@ -22,12 +22,7 @@ public static class PaymentExtensions
             this IServiceCollection serviceCollection,
             IConfiguration configuration)
     {
-        var options = configuration.GetSection("Rabbit").Get<RabbitOptions>();
-        ArgumentNullException.ThrowIfNull(options);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(options.Host);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(options.User);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(options.Password);
-
+        ArgumentNullException.ThrowIfNullOrEmpty(configuration.GetConnectionString("Rabbit"));
         serviceCollection.AddHostedService<InitJob>();
         serviceCollection.AddContext<ApplicationDbContext>(configuration);
         serviceCollection.AddTochkaBank(configuration);
@@ -47,15 +42,7 @@ public static class PaymentExtensions
 
             cfg.UsingRabbitMq((context, config) =>
             {
-                config.Host(options.Host, options.Vhost, h =>
-                {
-                    h.Username(options.User);
-                    h.Password(options.Password);
-                    if (options.UseSsl)
-                    {
-                        h.UseSsl();
-                    }
-                });
+                config.Host(configuration.GetConnectionString("Rabbit"));
                 config.ConfigureEndpoints(context);
             });
         });
