@@ -172,7 +172,7 @@ services:
     dockerfilePath: ./eshop/Dockerfile
     autoDeployTrigger: off
 
-  - type: private
+  - type: web
     name: rabbitmq
     env: docker
     plan: free
