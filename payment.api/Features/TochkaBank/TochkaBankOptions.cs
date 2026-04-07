@@ -1,9 +1,11 @@
+using Infrastructure.Core.Abstractions;
+
 namespace Payment.Api.Features.TochkaBank;
 
 /// <summary>
 /// Настройки.
 /// </summary>
-internal sealed class TochkaBankOptions
+internal sealed class TochkaBankOptions : IClientOption
 {
     /// <summary>
     /// Сервис.
