@@ -32,7 +32,7 @@ public interface OrderSubmittedEvent
     /// <summary>
     /// Покупки.
     /// </summary>
-    IReadOnlyCollection<CartItemModel> CartItems { get; }
+    IReadOnlyList<CartItemModel> CartItems { get; }
 
     /// <summary>
     /// Итого.

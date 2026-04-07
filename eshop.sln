@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paymnet.Api", "payment.api\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payment.Api.Tests", "tests\Payment.Api.Tests\Payment.Api.Tests.csproj", "{70549E20-9057-45BC-839D-9228F45AACA2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Delivery.Api.Tests", "tests\Delivery.Api.Tests\Delivery.Api.Tests.csproj", "{F06F30D3-AF34-4164-A530-7CD405FC9C7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -165,6 +167,18 @@ Global
 		{70549E20-9057-45BC-839D-9228F45AACA2}.Release|x64.Build.0 = Release|Any CPU
 		{70549E20-9057-45BC-839D-9228F45AACA2}.Release|x86.ActiveCfg = Release|Any CPU
 		{70549E20-9057-45BC-839D-9228F45AACA2}.Release|x86.Build.0 = Release|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Debug|x64.Build.0 = Debug|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Debug|x86.Build.0 = Debug|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Release|x64.ActiveCfg = Release|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Release|x64.Build.0 = Release|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Release|x86.ActiveCfg = Release|Any CPU
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -178,5 +192,6 @@ Global
 		{81ED30EA-B0B7-4121-96BA-59F96225E37A} = {87BB46C0-A336-6D76-5422-3C9ECC2D819A}
 		{5BCC8DEE-D668-4CE0-8B9C-EBF9315A37F2} = {008C753D-A6BB-A7B2-65D1-5C24FC5B7FD5}
 		{70549E20-9057-45BC-839D-9228F45AACA2} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{F06F30D3-AF34-4164-A530-7CD405FC9C7D} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal

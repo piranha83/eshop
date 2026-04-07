@@ -22,7 +22,7 @@ public static class PaymentExtensions
             this IServiceCollection serviceCollection,
             IConfiguration configuration)
     {
-        ArgumentNullException.ThrowIfNullOrEmpty(configuration.GetConnectionString("Rabbit"));
+        ArgumentNullException.ThrowIfNullOrEmpty(configuration.GetValue<string>("Rabbit"));
         serviceCollection.AddHostedService<InitJob>();
         serviceCollection.AddContext<ApplicationDbContext>(configuration);
         serviceCollection.AddTochkaBank(configuration);
@@ -42,7 +42,7 @@ public static class PaymentExtensions
 
             cfg.UsingRabbitMq((context, config) =>
             {
-                config.Host(configuration.GetConnectionString("Rabbit"));
+                config.Host(configuration.GetValue<string>("Rabbit"));
                 config.ConfigureEndpoints(context);
             });
         });

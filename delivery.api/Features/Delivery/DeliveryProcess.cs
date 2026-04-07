@@ -1,44 +1,35 @@
 using Contract.Api.Cart;
+using Contract.Api.Delivery;
 
-namespace Contract.Api.Delivery;
+namespace Delivery.Api.Features.Delivery;
 
 /// <summary>
 /// Команда: передать заказ в доставку.
 /// </summary>
-public interface DeliveryProcessEvent
+public record DeliveryProcess
 {
     /// <summary>
     /// Уникальный идентификатор заказа.
     /// </summary>
-    Guid OrderId { get; }
+    public Guid OrderId { get; set; }
 
     /// <summary>
     /// Уникальный идентификатор клиента.
     /// </summary>
-    Guid ClientId { get; }
+    public Guid ClientId { get; set; }
 
     /// <summary>
     /// Тип доставки.
     /// </summary>
-    DeliveryType Type { get; }
+    public DeliveryType Type { get; set; }
 
     /// <summary>
     /// Адресс доставки.
     /// </summary>
-    string Address { get; }
+    public string Address { get; set; } = default!;
 
     /// <summary>
     /// Покупки.
     /// </summary>
-    IReadOnlyList<CartItemModel> CartItems { get; }
-
-    /// <summary>
-    /// Телефон.
-    /// </summary>
-    string Phone { get; }
-
-    /// <summary>
-    /// Имя.
-    /// </summary>
-    string FirstName { get; }
+    public IReadOnlyList<CartItemModel> CartItems { get; set; } = default!;
 }
