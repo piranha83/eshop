@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
 using Contract.Api.Cart;
 using Contract.Api.Delivery;
-using Contract.Api.Order;
 using Contract.Api.Payment;
 
 namespace Order.Api.Features.Order;
@@ -9,7 +8,7 @@ namespace Order.Api.Features.Order;
 /// <summary>
 /// Создать заказ.
 /// </summary>
-public record OrderModel : OrderSubmittedEvent
+public record OrderModel
 {
     /// <summary>
     /// Уникальный идентификатор заказа.

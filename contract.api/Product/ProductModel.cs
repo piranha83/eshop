@@ -8,5 +8,10 @@ public record ProductModel
     /// <summary>
     /// Идентификатор.
     /// </summary>
-    long Id { get; set; } 
+    public long Id { get; set; }
+
+    /// <summary>
+    /// Цена.
+    /// </summary>
+    public decimal Price { get; set; }
 }

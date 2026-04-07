@@ -1,5 +1,6 @@
 using System.Reflection;
 using FluentValidation;
+using Infrastructure.Core.Abstractions;
 using Infrastructure.Core.Features.Context;
 using Infrastructure.Core.Features.Entity;
 using Infrastructure.Core.Features.HealthCheck;
@@ -14,6 +15,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using Npgsql;
 
@@ -160,7 +162,7 @@ public static class ServiceCollectionExtensions
                 BearerFormat = "JWT",
                 Scheme = "Bearer"
             });
-            
+
             option.AddSecurityRequirement(document =>
             {
                 var requirement = new OpenApiSecurityRequirement();
@@ -168,5 +170,36 @@ public static class ServiceCollectionExtensions
                 return requirement;
             });
         });
+    }
+
+    public static IServiceCollection AddHttpClient<IClient, Client, Handler, Options>(
+    this IServiceCollection serviceCollection,
+    IConfigurationSection configuration)
+    where IClient : class
+    where Client : class, IClient
+    where Options : class, IClientOption
+    where Handler : DelegatingHandler
+    {
+        ArgumentNullException.ThrowIfNull(serviceCollection);
+        ArgumentNullException.ThrowIfNull(configuration);
+
+        serviceCollection.Configure<Options>(configuration);
+
+        serviceCollection.AddScoped<Handler>();
+        serviceCollection.AddHttpClient<IClient, Client>((IServiceProvider sp, HttpClient client) =>
+        {
+            var options = sp.GetRequiredService<IOptions<Options>>();
+            ArgumentNullException.ThrowIfNullOrWhiteSpace(options.Value.Url);
+
+            client.BaseAddress = new Uri(options.Value.Url);
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(nameof(Client));
+        }).AddHttpMessageHandler<Handler>()
+        .SetHandlerLifetime(Timeout.InfiniteTimeSpan)
+        .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+        {
+            PooledConnectionLifetime = TimeSpan.FromMinutes(2)
+        });
+
+        return serviceCollection;
     }
 }
